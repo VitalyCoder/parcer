@@ -1,5 +1,5 @@
 export type TSpecialtyEntity = {
-	idl: string; // ID
+	id: string; // ID
 	name: string; // наименование специальности
 	cypher?: string; // шифр специальности
 };

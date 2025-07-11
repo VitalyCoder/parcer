@@ -70,7 +70,6 @@ const getEducationForms = async () => {
 };
 const getSpecialties = async () => {
 	const specialties = await getAllSpecialties();
-	console.log(specialties[0]);
 
 	await misc.mSetInBatches(
 		redisClient,
@@ -213,19 +212,19 @@ export default async () => {
 		console.log('Loading all data...');
 		await transactions();
 
-		console.log('Loading units...');
-		// await unit.loadUnits();
+		// console.log('Loading units...');
+		// // await unit.loadUnits();
 
-		console.log('Loading employees...');
-		// await educator.loadEmployees();
+		// console.log('Loading employees...');
+		// // await educator.loadEmployees();
 
-		console.log('Loading specialties...');
-		// await specialties.loadSpecialties();
+		// console.log('Loading specialties...');
+		// // await specialties.loadSpecialties();
 
-		console.log('Loading students and groups...');
-		// await students.loadStudentsAndGroups();
+		// console.log('Loading students and groups...');
+		// // await students.loadStudentsAndGroups();
 
-		console.log('Synchronization completed successfully');
+		// console.log('Synchronization completed successfully');
 	} catch (e) {
 		console.error('Synchronization error:', e);
 	}

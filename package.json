@@ -8,9 +8,9 @@
 	"main": "index.js",
 	"nodemonConfig": "nodemon.json",
 	"scripts": {
-		"dev": "docker-compose --env-file .env.develop.local up -d && npx prisma generate && npx prisma db push && NODE_ENV=develop nodemon",
-		"docker:start": "docker-compose --env-file .env.develop.local up -d && npx prisma generate && npx prisma db push NODE_ENV=develop",
-		"prisma:push": "npx prisma generate && npx prisma db push"
+		"dev": "docker-compose --env-file .env.develop.local up -d && npx prisma generate && npx prisma db push --force-reset && NODE_ENV=develop nodemon",
+		"docker:start": "docker-compose --env-file .env.develop.local up -d && npx prisma generate && npx prisma db push --force-reset NODE_ENV=develop",
+		"prisma:push": "npx prisma generate && npx prisma db push --force-reset"
 	},
 	"devDependencies": {
 		"@types/cli-progress": "^3.11.6",

@@ -5,38 +5,11 @@ import redisClient from '../../redis';
 
 const prisma = new PrismaClient();
 
-function isValidUUID(value: string | null | undefined): value is string {
-	return (
-		typeof value === 'string' &&
-		/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-			value
-		)
-	);
-}
-
 export const studentsToPerson = async () => {
 	const students = await getAllStudents();
 	let count: number = 0;
 	const addedEmails = new Set<string>();
-	const groups: Array<Prisma.groupsCreateInput> = [
-		{
-			degree: '',
-			educationForm: '',
-			course: 0,
-			specialtyId: '',
-			directionCode: '',
-			directionName: '',
-			programName: '',
-			programFull: '',
-			programLink: '',
-			departmentName: '',
-			plan: {
-				create: undefined,
-				connectOrCreate: undefined,
-				connect: undefined,
-			},
-		},
-	];
+	const groups: Array<Prisma.groupsCreateInput> = [];
 
 	for (const person of students) {
 		const personKey = person['ФизическоеЛицо_Key'];
@@ -58,6 +31,7 @@ export const studentsToPerson = async () => {
 				await prisma.$transaction(async () => {
 					const newPerson = await prisma.persons.create({
 						data: {
+							key: personKey,
 							lastName: separatedName?.lastName || '',
 							firstName: separatedName?.firstName || '',
 							middleName: separatedName?.middleName,
@@ -70,6 +44,7 @@ export const studentsToPerson = async () => {
 
 					await prisma.studentsProfiles.create({
 						data: {
+							key: personKey,
 							person: {
 								connect: {
 									id: newPerson.id,
@@ -92,17 +67,45 @@ export const studentsToPerson = async () => {
 								(await redisClient.get(
 									`creditBook:${person['ЗачетнаяКнига_Key']}`
 								)) || '0030d2d0-babe-448a-941b-5a78d3f3a9c4',
-							specialtyId: '0030d2d0-babe-448a-941b-5a78d3f3a9c4',
-							departmentId: '0030d2d0-babe-448a-941b-5a78d3f3a9c4',
-							groupId: '0030d2d0-babe-448a-941b-5a78d3f3a9c4',
+							specialtyId: specialtyId,
+							departmentId: departmentId,
+							groupId: groupId
+								? groupId
+								: '00000000-0000-0000-0000-000000000000',
 						},
 					});
 				});
 				addedEmails.add(email);
 				count += 1;
+				if (!groupId) continue;
+				groups.push({
+					key: groupId,
+					degree: (await redisClient.get(
+						`educationForm:${person['ФормаОбучения_Key']}`
+					)) as string,
+					educationForm: (await redisClient.get(
+						`educationForm:${person['ФормаОбучения_Key']}`
+					)) as string,
+					course:
+						Number(await redisClient.get(`course:${person['Курс_Key']}`)) || 0,
+					specialtyId: specialtyId,
+					directionCode: '',
+					directionName: '',
+					programName: '',
+					programFull: '',
+					programLink: '',
+					departmentName: '',
+					planId: (await redisClient.get(
+						`curriculum:${person['УчебныйПлан_Key']}`
+					)) as string,
+				});
 			} catch (error) {
 				console.error(`Ошибка при создании пользователя ${email}:`, error);
 			}
 		}
 	}
+
+	await prisma.groups.createMany({
+		data: groups,
+	});
 };

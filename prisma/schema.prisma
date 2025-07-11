@@ -13,6 +13,7 @@ datasource db {
 //
 model persons {
   id         String  @id @default(uuid()) @db.Uuid // Уникальный идентификатор пользователя
+  key        String  @unique
   sfeduEmail String? @unique @map("sfedu_email") @db.VarChar(255) // Электронная почта SFEDU
   photoUrl   String? @map("photo_url") @db.VarChar(255) // Фото
   lastName   String  @map("last_name") @db.VarChar(255) // Фамилия
@@ -30,6 +31,7 @@ model persons {
 //
 model studentsProfiles {
   id     String  @id @db.Uuid // Совпадает с id в Person
+  key    String  @unique
   person persons @relation(fields: [id], references: [id]) // Связь с Person
 
   course         Int // Курс
@@ -39,16 +41,16 @@ model studentsProfiles {
   groupOfficial  String @map("group_official") @db.VarChar(255) // Официальное название группы
   recordBookNum  String @map("record_book_num") @db.VarChar(255) // Номер зачётной книжки
   // specialty      specialties @relation(fields: [specialtyId], references: [id]) // Связь со специальностью
-  specialtyId    String @map("specialty_id") @db.Uuid // Внешний ключ на специальность
+  specialtyId    String @map("specialty_id") // Внешний ключ на специальность
   // department     departments @relation(fields: [departmentId], references: [id]) // Связь с департаментом
-  departmentId   String @map("department_id") @db.Uuid // Внешний ключ
+  departmentId   String @map("department_id") // Внешний ключ
 
   vpkGroups String[] @map("vpk_groups") @db.VarChar(255) // Группы ВПК
   debts     String[] @db.VarChar(255) // Задолженности
   practices String[] @db.VarChar(255) // Практики
 
   // group        groups         @relation(fields: [groupId], references: [id]) // Связь с группой
-  groupId String @map("group_id") @db.Uuid // Внешний ключ на группу
+  groupId String @map("group_id") // Внешний ключ на группу
   // scholarships scholarships[] // Массив стипендий
 }
 
@@ -57,13 +59,14 @@ model studentsProfiles {
 //
 model employeesProfiles {
   id     String  @id @db.Uuid // Совпадает с Person.id
+  key    String  @unique
   person persons @relation(fields: [id], references: [id]) // Связь с Person
 
-  academicTitle          String?  @map("academic_title") @db.VarChar(255) // Учёное звание
-  academicDegree         String?  @map("academic_degree") @db.VarChar(255) // Учёная степень
-  educationDetails       String?  @map("education_details") @db.VarChar(255) // Детали образования
-  generalExperienceStart DateTime @map("general_experience_start") // Начало общего стажа
-  fieldExperienceYears   Int      @map("field_experience_years") // Опыт работы в сфере (годы)
+  academicTitle          String?   @map("academic_title") @db.VarChar(255) // Учёное звание
+  academicDegree         String?   @map("academic_degree") @db.VarChar(255) // Учёная степень
+  educationDetails       String?   @map("education_details") @db.VarChar(255) // Детали образования
+  generalExperienceStart DateTime? @map("general_experience_start") // Начало общего стажа
+  fieldExperienceYears   Int       @map("field_experience_years") // Опыт работы в сфере (годы)
   disciplines            String[] // Преподаваемые дисциплины
   // employments            employments[] // Массив занятостей
 }
@@ -73,12 +76,13 @@ model employeesProfiles {
 //
 model employments {
   id                String @id @default(uuid()) @db.Uuid // Уникальный ID
+  key               String @unique
   // employeeProfile   employeesProfiles @relation(fields: [employeeProfileId], references: [id]) // Связь с Person
-  employeeProfileId String @map("employee_profile_id") @db.Uuid // Внешний ключ
+  employeeProfileId String @map("employee_profile_id") // Внешний ключ
   position          String @map("position") @db.VarChar(255) // Должность
   employmentType    String @map("employment_type") @db.VarChar(255) // Тип занятости (внешний/внутренний и т.п.)
   // department        departments @relation(fields: [departmentId], references: [id]) // Связь с подразделением
-  departmentId      String @map("department_id") @db.Uuid // Внешний ключ
+  departmentId      String @map("department_id") // Внешний ключ
   rate              Float // Ставка (0.5, 1.0 и т.п.)
 }
 
@@ -87,8 +91,9 @@ model employments {
 //
 model scholarships {
   id               String   @id @default(uuid()) @db.Uuid // Уникальный ID
+  key              String   @unique
   // studentProfile   studentsProfiles @relation(fields: [studentProfileId], references: [id]) // Связь с Person
-  studentProfileId String   @map("student_profile_id") @db.Uuid // Внешний ключ
+  studentProfileId String   @map("student_profile_id") // Внешний ключ
   amount           Float // Сумма стипендии
   startDate        DateTime @map("start_date") // Начало выплат
   endDate          DateTime @map("end_date") // Конец выплат
@@ -100,6 +105,7 @@ model scholarships {
 //
 model departments {
   id           String @id @default(uuid()) @db.Uuid // Уникальный ID
+  key          String @unique
   number       Int // Номер подразделения
   name         String @db.VarChar(255) // Название
   abbreviation String @db.VarChar(255) // Сокращение
@@ -114,6 +120,7 @@ model departments {
 //
 model specialties {
   id   String @id @default(uuid()) @db.Uuid // Уникальный ID
+  key  String @unique
   code String @unique @db.VarChar(255) // Код специальности
   name String @db.VarChar(255) // Название специальности
 
@@ -126,29 +133,31 @@ model specialties {
 //
 model educationsPlans {
   id         String @id @default(uuid()) @db.Uuid // Уникальный ID
+  key        String @unique
   planNumber String @map("plan_number") @db.VarChar(255) // Номер плана
 
-  groups groups[] // Группы, использующие этот план
+  // groups groups[] // Группы, использующие этот план
 }
 
 //
 // Учебные группы
 //
 model groups {
-  id             String          @id @default(uuid()) @db.Uuid // Уникальный ID
-  degree         String          @db.VarChar(255) // Степень (бакалавр, магистр)
-  educationForm  String          @map("education_form") @db.VarChar(255) // Форма обучения
+  id             String @id @default(uuid()) @db.Uuid // Уникальный ID
+  key            String
+  degree         String @db.VarChar(255) // Степень (бакалавр, магистр)
+  educationForm  String @map("education_form") @db.VarChar(255) // Форма обучения
   course         Int // Курс
-  plan           educationsPlans @relation(fields: [planId], references: [id]) // Связь с учебным планом
-  planId         String          @map("plan_id") @db.Uuid // Внешний ключ
+  // plan           educationsPlans @relation(fields: [planId], references: [id]) // Связь с учебным планом
+  planId         String @map("plan_id") // Внешний ключ
   // specialty      specialties     @relation(fields: [specialtyId], references: [id]) // Связь со специальностью
-  specialtyId    String          @map("specialty_id") @db.Uuid // Внешний ключ
-  directionCode  String          @map("direction_code") @db.VarChar(255) // Код направления
-  directionName  String          @map("direction_name") @db.VarChar(255) // Название направления
-  programName    String          @map("program_name") @db.VarChar(255) // Название программы
-  programFull    String          @map("program_full") @db.VarChar(255) // Полное название программы
-  programLink    String          @map("program_link") @db.VarChar(255) // Ссылка на программу url
-  departmentName String          @map("department_name") @db.VarChar(255) // Кафедра/департамент
+  specialtyId    String @map("specialty_id") // Внешний ключ
+  directionCode  String @map("direction_code") @db.VarChar(255) // Код направления
+  directionName  String @map("direction_name") @db.VarChar(255) // Название направления
+  programName    String @map("program_name") @db.VarChar(255) // Название программы
+  programFull    String @map("program_full") @db.VarChar(255) // Полное название программы
+  programLink    String @map("program_link") @db.VarChar(255) // Ссылка на программу url
+  departmentName String @map("department_name") @db.VarChar(255) // Кафедра/департамент
 
   // studentProfiles studentsProfiles[] // Связанные студенты
 }
@@ -158,11 +167,12 @@ model groups {
 //
 model rooms {
   id           String  @id @default(uuid()) @db.Uuid // Уникальный ID
+  key          String  @unique
   roomNumber   String  @map("room_number") @db.VarChar(255) // Номер аудитории
   name         String  @db.VarChar(255) // Название
   nameEnglish  String  @map("name_english") @db.VarChar(255) // Название на английском
   // department   departments? @relation(fields: [departmentId], references: [id]) // Связь с департаментом
-  departmentId String? @map("department_id") @db.Uuid // Внешний ключ
+  departmentId String? @map("department_id") // Внешний ключ
   description  String? @db.VarChar(255) // Описание аудитории
   seatCount    Int     @map("seat_count") // Кол-во посадочных мест
 
@@ -175,7 +185,7 @@ model rooms {
 model equipments {
   id            String @id @default(uuid()) @db.Uuid // Уникальный ID
   // room          rooms  @relation(fields: [roomId], references: [id]) // Связь с аудиторией
-  roomId        String @map("room_id") @db.Uuid // Внешний ключ
+  roomId        String @map("room_id") // Внешний ключ
   computerCount Int    @map("computer_count") // Кол-во компьютеров
   specs         String @db.VarChar(255) // Характеристики оборудования
 }
