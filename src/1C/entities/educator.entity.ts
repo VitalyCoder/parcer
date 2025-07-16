@@ -9,7 +9,7 @@ export type TEducatorEntity = {
 	isstudent: boolean; // является ли сотрудник студентом
 	academicTitle?: string; // ученое звание
 	academicDegree?: string; // ученая степень:
-	beginDate?: Date; // дата начала общего стажа
+	beginDate?: string; // дата начала общего стажа
 	lengthOfService?: number; // стаж по специальности в годах
 	maxHours: number; // максимально часов учебной нагрузки
 	minHours: number; // минимально часов учебной нагрузки
