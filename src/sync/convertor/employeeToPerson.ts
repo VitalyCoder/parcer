@@ -1,14 +1,13 @@
 import { getAllEmployees } from '../../1C/repositories/employees.repository';
-import { prisma } from '../../app';
+import { prismaLocal } from '../../app';
 import { separateName } from '../../common/utils/separateName';
 import redisClient from '../../redis';
 
 export const employeeToPerson = async () => {
 	const employees = await getAllEmployees();
-	let count = 0;
 	const addedEmails = new Set<string>();
 
-	const persons = await prisma.persons.findMany({
+	const persons = await prismaLocal.persons.findMany({
 		select: {
 			firstName: true,
 			lastName: true,
@@ -30,14 +29,14 @@ export const employeeToPerson = async () => {
 
 		const isNameMatch = name && fullNames.includes(name);
 		const existingByEmail = email
-			? await prisma.persons.findUnique({ where: { sfeduEmail: email } })
+			? await prismaLocal.persons.findUnique({ where: { sfeduEmail: email } })
 			: null;
-		const existingByKey = await prisma.persons.findUnique({
+		const existingByKey = await prismaLocal.persons.findUnique({
 			where: { key: personKey },
 		});
 
 		const matchedByName = separatedName
-			? await prisma.persons.findFirst({
+			? await prismaLocal.persons.findFirst({
 					where: {
 						firstName: separatedName.firstName,
 						lastName: separatedName.lastName,
@@ -46,7 +45,7 @@ export const employeeToPerson = async () => {
 			  })
 			: null;
 
-		const existingProfile = await prisma.employeesProfiles.findUnique({
+		const existingProfile = await prismaLocal.employeesProfiles.findUnique({
 			where: { key: personKey },
 		});
 
@@ -55,7 +54,7 @@ export const employeeToPerson = async () => {
 			continue;
 		}
 
-		await prisma.$transaction(async tx => {
+		await prismaLocal.$transaction(async tx => {
 			let person;
 
 			// 1. Уже есть person с таким key
@@ -112,9 +111,6 @@ export const employeeToPerson = async () => {
 			});
 		});
 
-		count++;
 		if (email) addedEmails.add(email);
 	}
-
-	console.log(`✅ Employees processed: ${count}`);
 };

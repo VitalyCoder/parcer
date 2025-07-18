@@ -1,5 +1,4 @@
 export type TBasesEntity = {
-    id: string;
-    name: string; // название основания для поступления
-
-}
+	id: string;
+	name: string; // название основания для поступления
+};

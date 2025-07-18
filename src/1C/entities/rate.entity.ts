@@ -1,4 +1,4 @@
 export type TRateEntity = {
-	id: string; 
+	id: string;
 	name: string;
 };

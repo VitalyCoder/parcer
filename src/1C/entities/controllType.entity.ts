@@ -1,4 +1,4 @@
 export type TControllTypeEntity = {
-    id: string;
+	id: string;
 	name: string;
-}
+};

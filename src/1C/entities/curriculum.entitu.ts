@@ -1,4 +1,4 @@
 export type TCurriculumEntity = {
-    id: string;
+	id: string;
 	number: number;
-}
+};

@@ -1,4 +1,4 @@
 export type TSubgroupEntity = {
-	idl: string; 
+	idl: string;
 	number: number;
 };

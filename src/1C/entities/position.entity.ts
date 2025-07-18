@@ -1,4 +1,4 @@
-export type TPlatoonEntity = {
-	id: string; 
+export type TPositionEntity = {
+	id: string;
 	name: string;
 };

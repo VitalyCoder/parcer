@@ -11,8 +11,9 @@ import cors from './common/middlewares/cors';
 
 import { errorHandler } from './common/middlewares/error-handler';
 import logger from './common/utils/logger';
-import { PrismaClient } from './generated/prisma';
-import sync from './sync/sync';
+import { PrismaClient as localClient } from './generated/prisma/local';
+import { PrismaClient as remoteClient } from './generated/prisma/remote';
+import { migration } from './migrations/migration';
 // import cronService from './services/cron.service';
 
 app.use(express.json({ limit: '10mb' }));
@@ -54,10 +55,12 @@ if (!fs.existsSync(dir)) {
 app.use(errorHandler);
 
 // prisma section
-export const prisma = new PrismaClient();
+export const prismaLocal = new localClient();
+export const prismaRemote = new remoteClient();
 
 // sync section
-void (async () => await sync())();
+// void (async () => await sync().then(() => migration()))();
+void (async () => await migration())();
 
 export const aWss = getWss();
 export default app;

@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../src/generated/prisma/remote"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_REMOTE")
+}
+
+model departments {
+  id               String             @id @db.Uuid
+  key              String             @unique
+  number           Int
+  name             String             @db.VarChar(255)
+  abbreviation     String             @db.VarChar(255)
+  employments      employments[]
+  rooms            rooms[]
+  studentsProfiles studentsProfiles[]
+}
+
+model educationsPlans {
+  id          String   @id @db.Uuid
+  key         String   @unique
+  plan_number String   @db.VarChar(255)
+  groups      groups[]
+}
+
+model employeesProfiles {
+  id                       String        @id @db.Uuid
+  academic_title           String?       @db.VarChar(255)
+  academic_degree          String?       @db.VarChar(255)
+  education_details        String?       @db.VarChar(255)
+  general_experience_start DateTime?
+  field_experience_years   Int
+  disciplines              String[]
+  persons                  persons       @relation(fields: [id], references: [id])
+  employments              employments[]
+}
+
+model employments {
+  id                  String            @id @db.Uuid
+  key                 String            @unique
+  employee_profile_id String            @db.Uuid
+  position            String            @db.VarChar(255)
+  employment_type     String            @db.VarChar(255)
+  department_id       String            @db.Uuid
+  rate                Float
+  departments         departments       @relation(fields: [department_id], references: [id])
+  employeesProfiles   employeesProfiles @relation(fields: [employee_profile_id], references: [id])
+}
+
+model equipments {
+  id             String @id @db.Uuid
+  key            String @unique
+  room_id        String @db.Uuid
+  computer_count Int
+  specs          String @db.VarChar(255)
+  rooms          rooms  @relation(fields: [room_id], references: [id])
+}
+
+model groups {
+  id               String             @id @db.Uuid
+  key              String             @unique
+  degree           String             @db.VarChar(255)
+  education_form   String             @db.VarChar(255)
+  course           Int
+  plan_id          String             @db.Uuid
+  specialty_id     String             @db.Uuid
+  direction_code   String             @db.VarChar(255)
+  direction_name   String             @db.VarChar(255)
+  program_name     String             @db.VarChar(255)
+  program_full     String             @db.VarChar(255)
+  program_link     String             @db.VarChar(255)
+  department_name  String             @db.VarChar(255)
+  educationsPlans  educationsPlans    @relation(fields: [plan_id], references: [id])
+  specialties      specialties        @relation(fields: [specialty_id], references: [id])
+  studentsProfiles studentsProfiles[]
+}
+
+model persons {
+  id                String             @id @db.Uuid
+  sfedu_email       String?            @unique @db.VarChar(255)
+  photo_url         String?            @db.VarChar(255)
+  last_name         String             @db.VarChar(255)
+  first_name        String             @db.VarChar(255)
+  middle_name       String?            @db.VarChar(255)
+  is_student        Boolean
+  is_employee       Boolean
+  employeesProfiles employeesProfiles?
+  studentsProfiles  studentsProfiles?
+}
+
+model rooms {
+  id            String       @id @db.Uuid
+  key           String       @unique
+  room_number   String       @db.VarChar(255)
+  name          String       @db.VarChar(255)
+  name_english  String       @db.VarChar(255)
+  department_id String?      @db.Uuid
+  description   String?      @db.VarChar(255)
+  seat_count    Int
+  equipments    equipments[]
+  departments   departments? @relation(fields: [department_id], references: [id])
+}
+
+model scholarships {
+  id                 String           @id @db.Uuid
+  key                String           @unique
+  student_profile_id String           @db.Uuid
+  amount             Float
+  start_date         DateTime
+  end_date           DateTime
+  type               String           @db.VarChar(255)
+  studentsProfiles   studentsProfiles @relation(fields: [student_profile_id], references: [id])
+}
+
+model specialties {
+  id               String             @id @db.Uuid
+  key              String             @unique
+  code             String             @db.VarChar(255)
+  name             String             @db.VarChar(255)
+  groups           groups[]
+  studentsProfiles studentsProfiles[]
+}
+
+model studentsProfiles {
+  id              String         @id @db.Uuid
+  course          Int
+  education_form  String         @db.VarChar(255)
+  education_level String         @db.VarChar(255)
+  group_internal  String         @db.VarChar(255)
+  group_official  String         @db.VarChar(255)
+  record_book_num String         @db.VarChar(255)
+  specialty_id    String         @db.Uuid
+  department_id   String         @db.Uuid
+  vpk_groups      String[]       @db.VarChar(255)
+  debts           String[]       @db.VarChar(255)
+  practices       String[]       @db.VarChar(255)
+  group_id        String         @db.Uuid
+  scholarships    scholarships[]
+  departments     departments    @relation(fields: [department_id], references: [id])
+  groups          groups         @relation(fields: [group_id], references: [id])
+  persons         persons        @relation(fields: [id], references: [id])
+  specialties     specialties    @relation(fields: [specialty_id], references: [id])
+}
+
+model services {
+  id          String   @id @db.Uuid
+  name        String   @unique @db.VarChar(255)
+  description String?  @db.VarChar(255)
+  rules       String[] @db.VarChar(255)
+  tokenId     String?  @unique @db.VarChar(255)
+  created_at  DateTime @default(now())
+  updated_at  DateTime
+  tokens      tokens?
+}
+
+model tokens {
+  id          String   @id @db.Uuid
+  token       String   @unique @db.VarChar(255)
+  is_activate Boolean  @default(true)
+  serviceId   String   @unique @db.Uuid
+  created_at  DateTime @default(now())
+  updated_at  DateTime
+  services    services @relation(fields: [serviceId], references: [id])
+}

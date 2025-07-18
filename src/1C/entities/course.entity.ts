@@ -1,4 +1,4 @@
 export type TCourseEntity = {
-    id: string;
+	id: string;
 	name: string;
-}
+};

@@ -1,4 +1,4 @@
 export type TOrderTypeEntity = {
-	id: string; 
+	id: string;
 	name: string;
 };

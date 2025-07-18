@@ -1,4 +1,4 @@
 export type TBranchOfScienceEntity = {
-     id: string;
-    name: string; // название отрасли
-}
+	id: string;
+	name: string; // название отрасли
+};

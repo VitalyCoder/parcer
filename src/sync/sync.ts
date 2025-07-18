@@ -209,23 +209,10 @@ export default async () => {
 		progressBar.stop();
 
 		// Загрузка основных данных
-		console.log('Loading all data...');
+		console.log('➡️ Loading all data...');
 		await transactions();
-
-		// console.log('Loading units...');
-		// // await unit.loadUnits();
-
-		// console.log('Loading employees...');
-		// // await educator.loadEmployees();
-
-		// console.log('Loading specialties...');
-		// // await specialties.loadSpecialties();
-
-		// console.log('Loading students and groups...');
-		// // await students.loadStudentsAndGroups();
-
-		// console.log('Synchronization completed successfully');
+		console.log('✅ Synchronization completed successfully');
 	} catch (e) {
-		console.error('Synchronization error:', e);
+		console.error('❌ Synchronization error:', e);
 	}
 };

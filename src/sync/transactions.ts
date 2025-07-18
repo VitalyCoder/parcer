@@ -1,25 +1,25 @@
 import { TSpecialtyEntity } from '../1C/entities/specialty.entity';
 import { getAllSpecialties } from '../1C/repositories/specialties.repository';
-import { PrismaClient } from '../generated/prisma';
+import { prismaLocal } from '../app';
 import { employeeToPerson } from './convertor/employeeToPerson';
 import { studentsToPerson } from './convertor/studentsToPerson';
 
-const prisma = new PrismaClient();
-
 export const transactions = async () => {
+	console.log(`➡️ Data synchronization has started`);
+
 	const specialties = (await getAllSpecialties()) as Array<TSpecialtyEntity>;
 	let specialtiesCount = 0;
 
 	for (const s of specialties) {
 		try {
-			const candidate = await prisma.specialties.findUnique({
+			const candidate = await prismaLocal.specialties.findUnique({
 				where: {
 					code: s.name,
 				},
 			});
 
 			if (!candidate) {
-				await prisma.specialties.create({
+				await prismaLocal.specialties.create({
 					data: {
 						key: s.id,
 						code: s.name,
@@ -33,10 +33,8 @@ export const transactions = async () => {
 		}
 	}
 
-	console.log(
-		`Специальности синхронизированы, добавлено ${specialtiesCount} записей`
-	);
-
 	await studentsToPerson();
 	await employeeToPerson();
+
+	console.log(`✅ Data synchronization completed`);
 };

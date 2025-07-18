@@ -1,4 +1,4 @@
 export type TEmailEntity = {
-    id: string;
-    address: string;
-}
+	id: string;
+	address: string;
+};
