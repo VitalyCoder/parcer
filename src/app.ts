@@ -14,6 +14,7 @@ import logger from './common/utils/logger';
 import { PrismaClient as localClient } from './generated/prisma/local';
 import { PrismaClient as remoteClient } from './generated/prisma/remote';
 import { migration } from './migrations/migration';
+import sync from './sync/sync';
 // import cronService from './services/cron.service';
 
 app.use(express.json({ limit: '10mb' }));
@@ -59,8 +60,8 @@ export const prismaLocal = new localClient();
 export const prismaRemote = new remoteClient();
 
 // sync section
-// void (async () => await sync().then(() => migration()))();
-void (async () => await migration())();
+void (async () => await sync().then(() => migration()))();
+// void (async () => await migration())();
 
 export const aWss = getWss();
 export default app;

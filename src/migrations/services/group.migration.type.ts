@@ -54,18 +54,43 @@ export const groupMigration = async () => {
 
 	// Миграция настоящих групп
 	for (const g of groups) {
-		const existingGroup = await prismaRemote.groups.findUnique({
-			where: { id: g.id },
-		});
-
-		if (existingGroup) {
-			console.log(`⚠️ Group with ID ${g.id} already exists. Skipping.`);
-			continue;
-		}
-
 		try {
-			await prismaRemote.groups.create({
-				data: {
+			await prismaRemote.groups.upsert({
+				where: { id: g.id },
+				update: {
+					key: g.key,
+					degree: g.degree,
+					education_form: g.educationForm,
+					course: g.course,
+					direction_code: g.directionCode,
+					direction_name: g.directionName,
+					program_name: g.programName,
+					program_full: g.programFull,
+					program_link: g.programLink,
+					department_name: g.departmentName,
+					educationsPlans: {
+						connectOrCreate: {
+							where: { key: dummyGroupId },
+							create: {
+								id: dummyGroupId,
+								key: dummyGroupId,
+								plan_number: dummyGroupId,
+							},
+						},
+					},
+					specialties: {
+						connectOrCreate: {
+							where: { key: g.specialtyId },
+							create: {
+								id: g.specialtyId,
+								key: g.specialtyId,
+								code: g.specialtyId,
+								name: g.specialtyId,
+							},
+						},
+					},
+				},
+				create: {
 					id: g.id,
 					key: g.key,
 					degree: g.degree,
@@ -100,9 +125,9 @@ export const groupMigration = async () => {
 					},
 				},
 			});
-			console.log(`✅ Group ${g.id} migrated successfully`);
+			console.log(`✅ Group ${g.id} upserted successfully`);
 		} catch (error) {
-			console.error(`❌ Error migrating group ${g.id}:`, error);
+			console.error(`❌ Error upserting group ${g.id}:`, error);
 		}
 	}
 };

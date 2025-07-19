@@ -3,8 +3,11 @@ import { prismaLocal } from '../../app';
 import { separateName } from '../../common/utils/separateName';
 import { Prisma } from '../../generated/prisma/local';
 import redisClient from '../../redis';
+import { groupsTransaction } from './groups';
 
 export const studentsToPerson = async () => {
+	console.log(`➡️ Student synchronization has started`);
+
 	const students = await getAllStudents();
 	const addedEmails = new Set<string>();
 	const groupsMap = new Map<string, Prisma.groupsCreateInput>();
@@ -106,11 +109,7 @@ export const studentsToPerson = async () => {
 			}
 		}
 	}
+	console.log(`✅ Student synchronization completed`);
 
-	const uniqueGroups = Array.from(groupsMap.values());
-
-	await prismaLocal.groups.createMany({
-		data: uniqueGroups,
-		skipDuplicates: true, // защитит от конфликтов, если в БД уже есть такие ключи
-	});
+	await groupsTransaction(groupsMap);
 };

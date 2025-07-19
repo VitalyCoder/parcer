@@ -6,25 +6,42 @@ const prismaRemote = new remoteClient();
 
 export const specialtyMigration = async () => {
 	const specialties = await prismaLocal.specialties.findMany();
+
+	// Создание фиктивной специальности, если отсутствует
+	const dummyId = '00000000-0000-0000-0000-000000000000';
 	const candidate = await prismaRemote.specialties.findUnique({
-		where: {
-			id: '00000000-0000-0000-0000-000000000000',
-		},
+		where: { id: dummyId },
 	});
 	if (!candidate) {
 		await prismaRemote.specialties.create({
 			data: {
-				id: '00000000-0000-0000-0000-000000000000',
-				key: '00000000-0000-0000-0000-000000000000',
-				code: '00000000-0000-0000-0000-000000000000',
-				name: '00000000-0000-0000-0000-000000000000',
+				id: dummyId,
+				key: dummyId,
+				code: dummyId,
+				name: dummyId,
 			},
 		});
 	}
-	if (specialties) {
-		await prismaRemote.specialties.createMany({
-			data: specialties,
-			skipDuplicates: true,
-		});
+
+	// Обновление или создание каждой специальности
+	for (const s of specialties) {
+		try {
+			await prismaRemote.specialties.upsert({
+				where: { id: s.id },
+				update: {
+					key: s.key,
+					code: s.code,
+					name: s.name,
+				},
+				create: {
+					id: s.id,
+					key: s.key,
+					code: s.code,
+					name: s.name,
+				},
+			});
+		} catch (error) {
+			console.error(`❌ Failed to upsert specialty ${s.id}:`, error);
+		}
 	}
 };

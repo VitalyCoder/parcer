@@ -4,6 +4,8 @@ import { separateName } from '../../common/utils/separateName';
 import redisClient from '../../redis';
 
 export const employeeToPerson = async () => {
+	console.log(`➡️ Employee synchronization has started`);
+
 	const employees = await getAllEmployees();
 	const addedEmails = new Set<string>();
 
@@ -113,4 +115,6 @@ export const employeeToPerson = async () => {
 
 		if (email) addedEmails.add(email);
 	}
+
+	console.log(`✅ Employee synchronization has completed`);
 };

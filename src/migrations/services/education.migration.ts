@@ -5,18 +5,20 @@ const prismaLocal = new localClient();
 const prismaRemote = new remoteClient();
 
 export const educationMigration = async () => {
-	const isExists = await prismaRemote.educationsPlans.findUnique({
+	const dummyId = '00000000-0000-0000-0000-000000000000';
+
+	await prismaRemote.educationsPlans.upsert({
 		where: {
-			id: '00000000-0000-0000-0000-000000000000',
+			id: dummyId,
+		},
+		update: {
+			key: dummyId,
+			plan_number: dummyId,
+		},
+		create: {
+			id: dummyId,
+			key: dummyId,
+			plan_number: dummyId,
 		},
 	});
-	if (!isExists) {
-		await prismaRemote.educationsPlans.create({
-			data: {
-				id: '00000000-0000-0000-0000-000000000000',
-				key: '00000000-0000-0000-0000-000000000000',
-				plan_number: '00000000-0000-0000-0000-000000000000',
-			},
-		});
-	}
 };

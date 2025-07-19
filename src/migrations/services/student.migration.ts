@@ -4,16 +4,29 @@ import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
 const prismaRemote = new remoteClient();
 
 export const studentMigration = async (student: studentsProfiles) => {
-	// console.log(`➡️ Migrating student ${student.id}`);
-
 	const remoteGroup = await prismaRemote.groups.findUnique({
 		where: { key: student.groupId },
 	});
 
-	if (remoteGroup) {
-		// Создаем профиль студента
-		await prismaRemote.studentsProfiles.create({
-			data: {
+	if (!remoteGroup) {
+		console.warn(
+			`⚠️ Remote group not found for groupId ${student.groupId}. Skipping student ${student.id}`
+		);
+		return;
+	}
+
+	try {
+		await prismaRemote.studentsProfiles.upsert({
+			where: { id: student.id },
+			update: {
+				course: student.course,
+				education_form: student.educationForm,
+				education_level: student.educationLevel,
+				group_internal: student.groupInternal,
+				group_official: student.groupOfficial,
+				record_book_num: student.recordBookNum,
+			},
+			create: {
 				course: student.course,
 				education_form: student.educationForm,
 				education_level: student.educationLevel,
@@ -21,7 +34,6 @@ export const studentMigration = async (student: studentsProfiles) => {
 				group_official: student.groupOfficial,
 				record_book_num: student.recordBookNum,
 
-				// Подключаем фиктивный департамент
 				departments: {
 					connect: {
 						key: '00000000-0000-0000-0000-000000000000',
@@ -47,7 +59,7 @@ export const studentMigration = async (student: studentsProfiles) => {
 				},
 			},
 		});
+	} catch (error) {
+		console.error(`❌ Error upserting student profile ${student.id}:`, error);
 	}
-
-	// console.log(`✅ Student profile for ${student.id} migrated`);
 };

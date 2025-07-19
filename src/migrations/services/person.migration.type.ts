@@ -16,17 +16,18 @@ export const personMigration = async () => {
 
 	for (const person of persons) {
 		try {
-			const exists = await prismaRemote.persons.findUnique({
+			await prismaRemote.persons.upsert({
 				where: { id: person.id },
-			});
-
-			if (exists) {
-				// console.log(`⚠️ Person with ID ${person.id} already exists. Skipping.`);
-				continue;
-			}
-
-			await prismaRemote.persons.create({
-				data: {
+				update: {
+					sfedu_email: person.sfeduEmail,
+					photo_url: person.photoUrl,
+					last_name: person.lastName,
+					first_name: person.firstName,
+					middle_name: person.middleName,
+					is_student: person.isStudent,
+					is_employee: person.isEmployee,
+				},
+				create: {
 					id: person.id,
 					sfedu_email: person.sfeduEmail,
 					photo_url: person.photoUrl,
@@ -45,9 +46,9 @@ export const personMigration = async () => {
 				await employeeMigration(person.employeeProfile);
 			}
 
-			// console.log(`✅ Person ${person.id} migrated successfully.`);
+			// console.log(`✅ Person ${person.id} upserted successfully.`);
 		} catch (error) {
-			console.error(`❌ Error migrating person ${person.id}:`, error);
+			console.error(`❌ Error upserting person ${person.id}:`, error);
 		}
 	}
 };
