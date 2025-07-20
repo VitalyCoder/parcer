@@ -1,8 +1,4 @@
-import { PrismaClient as localClient } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
-
-const prismaLocal = new localClient();
-const prismaRemote = new remoteClient();
+import { prismaLocal, prismaRemote } from '../../app';
 
 export const groupMigration = async () => {
 	const groups = await prismaLocal.groups.findMany();
@@ -20,7 +16,7 @@ export const groupMigration = async () => {
 				key: dummyGroupId,
 				degree: dummyGroupId,
 				education_form: dummyGroupId,
-				course: 0,
+				course: '',
 				direction_code: dummyGroupId,
 				direction_name: dummyGroupId,
 				program_name: dummyGroupId,
@@ -56,7 +52,7 @@ export const groupMigration = async () => {
 	for (const g of groups) {
 		try {
 			await prismaRemote.groups.upsert({
-				where: { id: g.id },
+				where: { key: g.key },
 				update: {
 					key: g.key,
 					degree: g.degree,
@@ -125,9 +121,9 @@ export const groupMigration = async () => {
 					},
 				},
 			});
-			console.log(`✅ Group ${g.id} upserted successfully`);
 		} catch (error) {
 			console.error(`❌ Error upserting group ${g.id}:`, error);
 		}
 	}
+	console.log(`✅ Group upserted successfully`);
 };

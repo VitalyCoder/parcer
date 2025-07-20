@@ -1,7 +1,5 @@
+import { prismaRemote } from '../../app';
 import { studentsProfiles } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
-
-const prismaRemote = new remoteClient();
 
 export const studentMigration = async (student: studentsProfiles) => {
 	const remoteGroup = await prismaRemote.groups.findUnique({
@@ -17,7 +15,7 @@ export const studentMigration = async (student: studentsProfiles) => {
 
 	try {
 		await prismaRemote.studentsProfiles.upsert({
-			where: { id: student.id },
+			where: { key: student.key },
 			update: {
 				course: student.course,
 				education_form: student.educationForm,
@@ -27,6 +25,7 @@ export const studentMigration = async (student: studentsProfiles) => {
 				record_book_num: student.recordBookNum,
 			},
 			create: {
+				key: student.key,
 				course: student.course,
 				education_form: student.educationForm,
 				education_level: student.educationLevel,
@@ -36,7 +35,7 @@ export const studentMigration = async (student: studentsProfiles) => {
 
 				departments: {
 					connect: {
-						key: '00000000-0000-0000-0000-000000000000',
+						key: student.departmentId,
 					},
 				},
 
@@ -48,7 +47,7 @@ export const studentMigration = async (student: studentsProfiles) => {
 
 				persons: {
 					connect: {
-						id: student.id,
+						key: student.key,
 					},
 				},
 

@@ -1,5 +1,5 @@
-import { Prisma } from 'src/generated/prisma/local';
 import { prismaLocal } from '../../app';
+import { Prisma } from '../../generated/prisma/local';
 
 export const groupsTransaction = async (
 	data: Map<string, Prisma.groupsCreateInput>

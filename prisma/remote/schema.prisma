@@ -11,9 +11,9 @@ datasource db {
 model departments {
   id               String             @id @db.Uuid
   key              String             @unique
-  number           Int
+  number           Int?
   name             String             @db.VarChar(255)
-  abbreviation     String             @db.VarChar(255)
+  abbreviation     String?            @db.VarChar(255)
   employments      employments[]
   rooms            rooms[]
   studentsProfiles studentsProfiles[]
@@ -34,6 +34,7 @@ model employeesProfiles {
   general_experience_start DateTime?
   field_experience_years   Int
   disciplines              String[]
+  key                      String        @unique
   persons                  persons       @relation(fields: [id], references: [id])
   employments              employments[]
 }
@@ -64,7 +65,7 @@ model groups {
   key              String             @unique
   degree           String             @db.VarChar(255)
   education_form   String             @db.VarChar(255)
-  course           Int
+  course           String
   plan_id          String             @db.Uuid
   specialty_id     String             @db.Uuid
   direction_code   String             @db.VarChar(255)
@@ -87,6 +88,7 @@ model persons {
   middle_name       String?            @db.VarChar(255)
   is_student        Boolean
   is_employee       Boolean
+  key               String             @unique
   employeesProfiles employeesProfiles?
   studentsProfiles  studentsProfiles?
 }
@@ -126,7 +128,7 @@ model specialties {
 
 model studentsProfiles {
   id              String         @id @db.Uuid
-  course          Int
+  course          String
   education_form  String         @db.VarChar(255)
   education_level String         @db.VarChar(255)
   group_internal  String         @db.VarChar(255)
@@ -138,6 +140,7 @@ model studentsProfiles {
   debts           String[]       @db.VarChar(255)
   practices       String[]       @db.VarChar(255)
   group_id        String         @db.Uuid
+  key             String         @unique
   scholarships    scholarships[]
   departments     departments    @relation(fields: [department_id], references: [id])
   groups          groups         @relation(fields: [group_id], references: [id])

@@ -24,10 +24,9 @@ export const specialtiesTransaction = async () => {
 					},
 				});
 			}
-
-			console.log(`✅ Specialties synchronization has completed`);
 		} catch (error) {
 			console.error(`Ошибка при добавлении specialty с name: ${s.name}`, error);
 		}
 	}
+	console.log(`✅ Specialties synchronization has completed`);
 };

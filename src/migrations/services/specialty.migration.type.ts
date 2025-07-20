@@ -1,8 +1,4 @@
-import { PrismaClient as localClient } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
-
-const prismaLocal = new localClient();
-const prismaRemote = new remoteClient();
+import { prismaLocal, prismaRemote } from '../../app';
 
 export const specialtyMigration = async () => {
 	const specialties = await prismaLocal.specialties.findMany();
@@ -27,7 +23,7 @@ export const specialtyMigration = async () => {
 	for (const s of specialties) {
 		try {
 			await prismaRemote.specialties.upsert({
-				where: { id: s.id },
+				where: { key: s.key },
 				update: {
 					key: s.key,
 					code: s.code,

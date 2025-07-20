@@ -34,7 +34,7 @@ model studentsProfiles {
   key    String  @unique
   person persons @relation(fields: [id], references: [id]) // Связь с Person
 
-  course         Int // Курс
+  course         String // Курс
   educationForm  String @map("education_form") @db.VarChar(255) // Форма обучения
   educationLevel String @map("education_level") @db.VarChar(255) // Уровень образования
   groupInternal  String @map("group_internal") @db.VarChar(255) // Внутреннее обозначение группы
@@ -104,11 +104,11 @@ model scholarships {
 // Подразделения (кафедры, факультеты и т.п.)
 //
 model departments {
-  id           String @id @default(uuid()) @db.Uuid // Уникальный ID
-  key          String @unique
-  number       Int // Номер подразделения
-  name         String @db.VarChar(255) // Название
-  abbreviation String @db.VarChar(255) // Сокращение
+  id           String  @id @default(uuid()) @db.Uuid // Уникальный ID
+  key          String  @unique
+  number       Int? // Номер подразделения
+  name         String  @db.VarChar(255) // Название
+  abbreviation String? @db.VarChar(255) // Сокращение
 
   // studentProfiles studentsProfiles[] // Связанные студенты
   // employments employments[] // Связанные сотрудники
@@ -147,7 +147,7 @@ model groups {
   key            String @unique
   degree         String @db.VarChar(255) // Степень (бакалавр, магистр)
   educationForm  String @map("education_form") @db.VarChar(255) // Форма обучения
-  course         Int // Курс
+  course         String // Курс
   // plan           educationsPlans @relation(fields: [planId], references: [id]) // Связь с учебным планом
   planId         String @map("plan_id") // Внешний ключ
   // specialty      specialties     @relation(fields: [specialtyId], references: [id]) // Связь со специальностью

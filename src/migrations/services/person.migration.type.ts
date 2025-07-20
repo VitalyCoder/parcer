@@ -1,10 +1,6 @@
-import { PrismaClient as localClient } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
+import { prismaLocal, prismaRemote } from '../../app';
 import { employeeMigration } from './employee.migration';
 import { studentMigration } from './student.migration';
-
-const prismaLocal = new localClient();
-const prismaRemote = new remoteClient();
 
 export const personMigration = async () => {
 	const persons = await prismaLocal.persons.findMany({
@@ -17,9 +13,9 @@ export const personMigration = async () => {
 	for (const person of persons) {
 		try {
 			await prismaRemote.persons.upsert({
-				where: { id: person.id },
+				where: { key: person.key },
 				update: {
-					sfedu_email: person.sfeduEmail,
+					...(person.sfeduEmail && { sfedu_email: person.sfeduEmail }),
 					photo_url: person.photoUrl,
 					last_name: person.lastName,
 					first_name: person.firstName,
@@ -29,6 +25,7 @@ export const personMigration = async () => {
 				},
 				create: {
 					id: person.id,
+					key: person.key,
 					sfedu_email: person.sfeduEmail,
 					photo_url: person.photoUrl,
 					last_name: person.lastName,
@@ -48,7 +45,7 @@ export const personMigration = async () => {
 
 			// console.log(`✅ Person ${person.id} upserted successfully.`);
 		} catch (error) {
-			console.error(`❌ Error upserting person ${person.id}:`, error);
+			console.error(`❌ Ошибка при миграции person ${person.id}:`, error);
 		}
 	}
 };

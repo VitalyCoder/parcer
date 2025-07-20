@@ -3,6 +3,8 @@ import { prismaLocal } from '../../app';
 import { separateName } from '../../common/utils/separateName';
 import { Prisma } from '../../generated/prisma/local';
 import redisClient from '../../redis';
+import { departmentTransaction } from './department';
+import { educationPlanTransaction } from './educationPlan';
 import { groupsTransaction } from './groups';
 
 export const studentsToPerson = async () => {
@@ -11,6 +13,8 @@ export const studentsToPerson = async () => {
 	const students = await getAllStudents();
 	const addedEmails = new Set<string>();
 	const groupsMap = new Map<string, Prisma.groupsCreateInput>();
+	const educationPlanMap = new Map<string, Prisma.educationsPlansCreateInput>();
+	const departmentsMap = new Map<string, Prisma.departmentsCreateInput>();
 
 	for (const person of students) {
 		const personKey = person['ФизическоеЛицо_Key'];
@@ -20,12 +24,36 @@ export const studentsToPerson = async () => {
 		const departmentId = person['Факультет_Key'];
 		const groupKey = person['Группа_Key'];
 		const groupId = await redisClient.get(`group:${groupKey}`);
+		const educationPlanKey = person['УчебныйПлан_Key'];
+		const educationPlan = (await redisClient.get(
+			`curriculum:${educationPlanKey}`
+		)) as string;
+		const departmentKey = person['Факультет_Key'];
+		const department = (await redisClient.get(
+			`unit:${departmentKey}`
+		)) as string;
+		const courseKey = person['Курс_Key'];
+		const course = await redisClient.get(`course:${courseKey}`);
 
 		if (!email || addedEmails.has(email)) continue;
 
-		const existingPerson = await prismaLocal.persons.findFirst({
+		const existingPerson = await prismaLocal.persons.findUnique({
 			where: { sfeduEmail: email },
 		});
+
+		if (!educationPlanMap.has(educationPlanKey)) {
+			educationPlanMap.set(educationPlanKey, {
+				key: educationPlanKey,
+				planNumber: educationPlan,
+			});
+		}
+
+		if (!departmentsMap.has(departmentKey)) {
+			departmentsMap.set(departmentKey, {
+				key: departmentKey,
+				name: department,
+			});
+		}
 
 		if (!existingPerson) {
 			const separatedName = separateName(name as string);
@@ -52,23 +80,18 @@ export const studentsToPerson = async () => {
 									id: newPerson.id,
 								},
 							},
-							course:
-								Number(await redisClient.get(`course:${person['Курс_Key']}`)) ||
-								0,
-							educationForm: (await redisClient.get(
-								`educationForm:${person['ФормаОбучения_Key']}`
-							)) as string,
+							course: course || '',
+							educationForm:
+								(await redisClient.get(
+									`educationForm:${person['ФормаОбучения_Key']}`
+								)) || '',
 							educationLevel: '',
-							groupInternal:
-								(await redisClient.get(`group:${groupKey}`)) ||
-								'0030d2d0-babe-448a-941b-5a78d3f3a9c4',
-							groupOfficial:
-								(await redisClient.get(`group:${groupKey}`)) ||
-								'0030d2d0-babe-448a-941b-5a78d3f3a9c4',
+							groupInternal: (await redisClient.get(`group:${groupKey}`)) || '',
+							groupOfficial: (await redisClient.get(`group:${groupKey}`)) || '',
 							recordBookNum:
 								(await redisClient.get(
 									`creditBook:${person['ЗачетнаяКнига_Key']}`
-								)) || '0030d2d0-babe-448a-941b-5a78d3f3a9c4',
+								)) || '',
 							specialtyId: specialtyId,
 							departmentId: departmentId,
 							groupId: groupId ?? '00000000-0000-0000-0000-000000000000',
@@ -89,16 +112,14 @@ export const studentsToPerson = async () => {
 						educationForm: (await redisClient.get(
 							`educationForm:${person['ФормаОбучения_Key']}`
 						)) as string,
-						course:
-							Number(await redisClient.get(`course:${person['Курс_Key']}`)) ||
-							0,
+						course: course || '',
 						specialtyId: specialtyId,
 						directionCode: '',
 						directionName: '',
 						programName: '',
 						programFull: '',
-						programLink: '',
-						departmentName: '',
+						programLink: '', // данные будут позже
+						departmentName: department,
 						planId: (await redisClient.get(
 							`curriculum:${person['УчебныйПлан_Key']}`
 						)) as string,
@@ -112,4 +133,6 @@ export const studentsToPerson = async () => {
 	console.log(`✅ Student synchronization completed`);
 
 	await groupsTransaction(groupsMap);
+	await educationPlanTransaction(educationPlanMap);
+	await departmentTransaction(departmentsMap);
 };

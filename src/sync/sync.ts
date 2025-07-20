@@ -20,133 +20,169 @@ import { getAllSpecialties } from '../1C/repositories/specialties.repository';
 import { getAllSubgroups } from '../1C/repositories/subgroups.repository';
 import { getAllUnits } from '../1C/repositories/units.repository';
 import misc from '../common/utils/misc';
-import redisClient, { bulkHSet } from '../redis';
-import { transactions } from './transactions';
+import redisClient, { bulkHSet, deleteKeysByPrefix } from '../redis';
 
 // Функции для получения данных и кэширования в Redis
 const getPositions = async () => {
+	await deleteKeysByPrefix('position');
 	const positions = await getAllPositions();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('position', positions)
 	);
 };
+
 const getRates = async () => {
+	await deleteKeysByPrefix('rate');
 	const rates = await getAllRates();
 	await misc.mSetInBatches(redisClient, misc.convertArrayToFlat('rate', rates));
 };
+
 const getNames = async () => {
+	await deleteKeysByPrefix('person');
 	const names = await getAllNames();
 	await bulkHSet(redisClient, 'name', names, 'person');
 };
+
 const getEmails = async () => {
 	const emails = await getAllEmails();
 	await bulkHSet(redisClient, 'email', emails, 'person');
 };
+
 const getUnits = async () => {
+	await deleteKeysByPrefix('unit');
 	const units = await getAllUnits();
 	await misc.mSetInBatches(redisClient, misc.convertArrayToFlat('unit', units));
 };
+
 const getSchoolYears = async () => {
+	await deleteKeysByPrefix('schoolYear');
 	const schoolYears = await getAllSchoolYears();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('schoolYear', schoolYears)
 	);
 };
+
 const getCurriculum = async () => {
+	await deleteKeysByPrefix('curriculum');
 	const curriculum = await getAllCurriculum();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('curriculum', curriculum)
 	);
 };
+
 const getEducationForms = async () => {
+	await deleteKeysByPrefix('educationForm');
 	const educationForms = await getAllEducationForms();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('educationForm', educationForms)
 	);
 };
-const getSpecialties = async () => {
-	const specialties = await getAllSpecialties();
 
+const getSpecialties = async () => {
+	await deleteKeysByPrefix('specialty');
+	const specialties = await getAllSpecialties();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('specialty', specialties)
 	);
 };
+
 const getSpecializations = async () => {
+	await deleteKeysByPrefix('specialization');
 	const specializations = await getAllSpecializations();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('specialization', specializations)
 	);
 };
+
 const getGroups = async () => {
+	await deleteKeysByPrefix('group');
 	const groups = await getAllGroups();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('group', groups)
 	);
 };
+
 const getCourses = async () => {
+	await deleteKeysByPrefix('course');
 	const courses = await getAllCourses();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('course', courses)
 	);
 };
+
 const getSubgroups = async () => {
+	await deleteKeysByPrefix('subgroup');
 	const subgroups = await getAllSubgroups();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('subgroup', subgroups)
 	);
 };
+
 const getConditions = async () => {
+	await deleteKeysByPrefix('condition');
 	const conditions = await getAllConditions();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('condition', conditions)
 	);
 };
+
 const getOrderTypes = async () => {
+	await deleteKeysByPrefix('orderType');
 	const orderTypes = await getAllOrderTypes();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('orderType', orderTypes)
 	);
 };
+
 const getFormsOfOrders = async () => {
+	await deleteKeysByPrefix('formOfOrder');
 	const formsOfOrders = await getAllFormOfOrders();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('formOfOrder', formsOfOrders)
 	);
 };
+
 const getBases = async () => {
+	await deleteKeysByPrefix('basis');
 	const bases = await getAllBases();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('basis', bases)
 	);
 };
+
 const getCreditBooks = async () => {
+	await deleteKeysByPrefix('creditBook');
 	const creditBooks = await getAllCreditBooks();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('creditBook', creditBooks)
 	);
 };
+
 const getBranchesOfScience = async () => {
+	await deleteKeysByPrefix('branchOfScience');
 	const branchesOfScience = await getAllBranchesOfScience();
 	await misc.mSetInBatches(
 		redisClient,
 		misc.convertArrayToFlat('branchOfScience', branchesOfScience)
 	);
 };
+
 const getPlatoons = async () => {
+	await deleteKeysByPrefix('platoon');
 	const platoons = await getAllPlatoons();
 	await misc.mSetInBatches(
 		redisClient,
@@ -181,7 +217,6 @@ export default async () => {
 			{ name: 'Groups', func: getGroups },
 		];
 
-		// Прогресс бар для загрузки данных
 		const progressBar = new cliProgress.SingleBar(
 			{
 				format:
@@ -195,7 +230,6 @@ export default async () => {
 
 		progressBar.start(dataFetchFunctions.length, 0, { name: '' });
 
-		// Выполняем все функции последовательно для лучшего отображения прогресса
 		for (const item of dataFetchFunctions) {
 			try {
 				await item.func();
@@ -207,11 +241,6 @@ export default async () => {
 		}
 
 		progressBar.stop();
-
-		// Загрузка основных данных
-		console.log('➡️ Loading all data...');
-		await transactions();
-		console.log('✅ Synchronization completed successfully');
 	} catch (e) {
 		console.error('❌ Synchronization error:', e);
 	}

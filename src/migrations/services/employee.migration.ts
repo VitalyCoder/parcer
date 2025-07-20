@@ -1,21 +1,20 @@
+import { prismaRemote } from '../../app';
 import { employeesProfiles } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
-
-const prismaRemote = new remoteClient();
 
 export const employeeMigration = async (employee: employeesProfiles) => {
 	await prismaRemote.employeesProfiles.upsert({
-		where: { id: employee.id },
+		where: { key: employee.key },
 		update: {
 			general_experience_start: employee.generalExperienceStart,
 			field_experience_years: employee.fieldExperienceYears,
 		},
 		create: {
+			key: employee.key,
 			general_experience_start: employee.generalExperienceStart,
 			field_experience_years: employee.fieldExperienceYears,
 			persons: {
 				connect: {
-					id: employee.id,
+					key: employee.key,
 				},
 			},
 		},

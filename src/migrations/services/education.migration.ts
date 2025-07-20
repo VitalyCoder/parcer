@@ -1,24 +1,38 @@
-import { PrismaClient as localClient } from '../../generated/prisma/local';
-import { PrismaClient as remoteClient } from '../../generated/prisma/remote';
-
-const prismaLocal = new localClient();
-const prismaRemote = new remoteClient();
+import { prismaLocal, prismaRemote } from '../../app';
 
 export const educationMigration = async () => {
+	const educationPlans = await prismaLocal.educationsPlans.findMany();
 	const dummyId = '00000000-0000-0000-0000-000000000000';
 
-	await prismaRemote.educationsPlans.upsert({
+	const isExists = await prismaRemote.educationsPlans.findUnique({
 		where: {
 			id: dummyId,
 		},
-		update: {
-			key: dummyId,
-			plan_number: dummyId,
-		},
-		create: {
-			id: dummyId,
-			key: dummyId,
-			plan_number: dummyId,
-		},
 	});
+	if (!isExists) {
+		await prismaRemote.educationsPlans.create({
+			data: {
+				id: dummyId,
+				key: dummyId,
+				plan_number: dummyId,
+			},
+		});
+	}
+
+	for (const ep of educationPlans) {
+		await prismaRemote.educationsPlans.upsert({
+			where: {
+				key: ep.key,
+			},
+			update: {
+				key: ep.key,
+				plan_number: dummyId,
+			},
+			create: {
+				id: ep.id,
+				key: ep.key,
+				plan_number: ep.planNumber,
+			},
+		});
+	}
 };

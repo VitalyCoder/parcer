@@ -17,6 +17,23 @@ export const bulkHSet = async (
 
 export const fetchRedisValue = async (key: string) => redisClient.get(key);
 
+export const deleteKeysByPrefix = async (prefix: string) => {
+	let cursor = '0';
+	do {
+		// вызов scan с cursor в виде строки
+		const reply = await redisClient.scan(cursor, {
+			MATCH: `${prefix}:*`,
+			COUNT: 100,
+		});
+
+		cursor = reply.cursor;
+
+		if (reply.keys.length > 0) {
+			await redisClient.del(reply.keys);
+		}
+	} while (cursor !== '0');
+};
+
 const redisClient: RedisClientType = createClient({
 	url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 });

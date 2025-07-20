@@ -5,7 +5,7 @@
 	"license": "ISC",
 	"author": "",
 	"type": "commonjs",
-	"main": "index.js",
+	"main": "index.ts",
 	"nodemonConfig": "nodemon.json",
 	"scripts": {
 		"dev": "docker-compose --env-file .env.develop.local up -d && npx prisma generate --schema=prisma/local/schema.prisma && npx prisma db push --schema=prisma/local/schema.prisma --force-reset && NODE_ENV=develop nodemon",
@@ -39,6 +39,7 @@
 		"express": "^5.1.0",
 		"express-ws": "^5.0.2",
 		"morgan": "^1.10.0",
+		"node-cron": "^4.2.1",
 		"nodemon": "^3.1.10",
 		"prisma": "^6.11.1",
 		"qs": "^6.14.0",
