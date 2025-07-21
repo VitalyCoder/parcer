@@ -59,7 +59,7 @@ cron.schedule('0 2 * * *', async () => {
 	try {
 		await syncService();
 	} catch (error) {
-		console.error(`ошибка обновления данных: ${error}`);
+		console.error(`Data update error: ${error}`);
 	}
 });
 
