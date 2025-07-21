@@ -47,58 +47,49 @@ export const employeeToPerson = async () => {
 			  })
 			: null;
 
-		const existingProfile = await prismaLocal.employeesProfiles.findUnique({
-			where: { key: personKey },
-		});
-
-		if (existingProfile) {
-			// console.warn(`Skipping existing profile for key: ${personKey}`);
-			continue;
-		}
-
 		await prismaLocal.$transaction(async tx => {
-			let person;
+			let person = existingByKey;
 
-			// 1. Уже есть person с таким key
-			if (existingByKey) {
-				person = existingByKey;
+			if (!person) {
+				if (existingByEmail?.isStudent) {
+					person = await tx.persons.update({
+						where: { sfeduEmail: email! },
+						data: {
+							isEmployee: true,
+							key: personKey,
+						},
+					});
+				} else if (isNameMatch && matchedByName) {
+					person = await tx.persons.update({
+						where: { id: matchedByName.id },
+						data: {
+							isEmployee: true,
+							key: personKey,
+							sfeduEmail: email || matchedByName.sfeduEmail,
+						},
+					});
+				} else {
+					person = await tx.persons.create({
+						data: {
+							key: personKey,
+							lastName: separatedName?.lastName || '',
+							firstName: separatedName?.firstName || '',
+							middleName: separatedName?.middleName || '',
+							sfeduEmail: email,
+							photoUrl: null,
+							isStudent: false,
+							isEmployee: true,
+						},
+					});
+				}
 			}
 
-			// 2. Обновляем существующего по email, если он студент
-			else if (existingByEmail?.isStudent) {
-				person = await tx.persons.update({
-					where: { sfeduEmail: email! },
-					data: { isEmployee: true },
-				});
-			}
-
-			// 3. Если совпало имя — обновим найденного по имени
-			else if (isNameMatch && matchedByName) {
-				person = await tx.persons.update({
-					where: { id: matchedByName.id },
-					data: { isEmployee: true },
-				});
-			}
-
-			// 4. Иначе создаём нового
-			else {
-				person = await tx.persons.create({
-					data: {
-						key: personKey,
-						lastName: separatedName?.lastName || '',
-						firstName: separatedName?.firstName || '',
-						middleName: separatedName?.middleName || '',
-						sfeduEmail: email,
-						photoUrl: null,
-						isStudent: false,
-						isEmployee: true,
-					},
-				});
-			}
-
-			// Создаём профиль сотрудника, только если он ещё не существует
-			await tx.employeesProfiles.create({
-				data: {
+			await tx.employeesProfiles.upsert({
+				where: { key: personKey },
+				update: {
+					id: person.id,
+				},
+				create: {
 					key: personKey,
 					person: {
 						connect: { id: person.id },

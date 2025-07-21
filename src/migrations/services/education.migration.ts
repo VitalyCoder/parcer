@@ -1,6 +1,7 @@
 import { prismaLocal, prismaRemote } from '../../app';
 
 export const educationMigration = async () => {
+	console.log(`➡️ Educations plans migration has started`);
 	const educationPlans = await prismaLocal.educationsPlans.findMany();
 	const dummyId = '00000000-0000-0000-0000-000000000000';
 
@@ -35,4 +36,6 @@ export const educationMigration = async () => {
 			},
 		});
 	}
+
+	console.log(`✅ Educations plans migration completed`);
 };

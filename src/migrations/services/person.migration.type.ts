@@ -3,6 +3,7 @@ import { employeeMigration } from './employee.migration';
 import { studentMigration } from './student.migration';
 
 export const personMigration = async () => {
+	console.log(`➡️ Persons migration has started`);
 	const persons = await prismaLocal.persons.findMany({
 		include: {
 			studentProfile: true,
@@ -42,10 +43,10 @@ export const personMigration = async () => {
 			if (person.employeeProfile) {
 				await employeeMigration(person.employeeProfile);
 			}
-
-			// console.log(`✅ Person ${person.id} upserted successfully.`);
 		} catch (error) {
-			console.error(`❌ Ошибка при миграции person ${person.id}:`, error);
+			console.error(`❌ Error during migration of person ${person.id}:`, error);
 		}
 	}
+
+	console.log(`✅ Persons migration completed`);
 };

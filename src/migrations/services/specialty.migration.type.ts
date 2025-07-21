@@ -1,9 +1,9 @@
 import { prismaLocal, prismaRemote } from '../../app';
 
 export const specialtyMigration = async () => {
+	console.log(`➡️ Specialties migration has started`);
 	const specialties = await prismaLocal.specialties.findMany();
 
-	// Создание фиктивной специальности, если отсутствует
 	const dummyId = '00000000-0000-0000-0000-000000000000';
 	const candidate = await prismaRemote.specialties.findUnique({
 		where: { id: dummyId },
@@ -19,7 +19,6 @@ export const specialtyMigration = async () => {
 		});
 	}
 
-	// Обновление или создание каждой специальности
 	for (const s of specialties) {
 		try {
 			await prismaRemote.specialties.upsert({
@@ -40,4 +39,5 @@ export const specialtyMigration = async () => {
 			console.error(`❌ Failed to upsert specialty ${s.id}:`, error);
 		}
 	}
+	console.log(`✅ Specialties migration completed`);
 };

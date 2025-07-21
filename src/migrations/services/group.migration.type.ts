@@ -1,9 +1,9 @@
 import { prismaLocal, prismaRemote } from '../../app';
 
 export const groupMigration = async () => {
+	console.log(`➡️ Groups migration has started`);
 	const groups = await prismaLocal.groups.findMany();
 
-	// Создаем фиктивную группу, если её нет
 	const dummyGroupId = '00000000-0000-0000-0000-000000000000';
 	const isExists = await prismaRemote.groups.findUnique({
 		where: { id: dummyGroupId },
@@ -48,7 +48,6 @@ export const groupMigration = async () => {
 		});
 	}
 
-	// Миграция настоящих групп
 	for (const g of groups) {
 		try {
 			await prismaRemote.groups.upsert({
@@ -125,5 +124,5 @@ export const groupMigration = async () => {
 			console.error(`❌ Error upserting group ${g.id}:`, error);
 		}
 	}
-	console.log(`✅ Group upserted successfully`);
+	console.log(`✅ Groups migration completed`);
 };

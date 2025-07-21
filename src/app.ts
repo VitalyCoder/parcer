@@ -17,7 +17,12 @@ import { PrismaClient as remoteClient } from './generated/prisma/remote';
 import { migration } from './migrations/migration';
 import sync from './sync/sync';
 import { transactions } from './sync/transactions';
-// import cronService from './services/cron.service';
+
+const syncService = async () => {
+	await sync()
+		.then(() => transactions())
+		.then(() => migration());
+};
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -30,13 +35,10 @@ app.use(
 	})
 );
 
-// logger section
 const logStream = fs.createWriteStream('access.log', {
 	flags: 'a',
 });
 app.use(morgan('combined', { stream: logStream }));
-
-// logger section
 if (process.env.NODE_ENV !== 'production') {
 	logger.add(
 		new winston.transports.Console({
@@ -45,43 +47,28 @@ if (process.env.NODE_ENV !== 'production') {
 	);
 }
 
-// uploader section
 app.use('/uploads', express.static('./uploads'));
 const dir = './uploads';
 if (!fs.existsSync(dir)) {
 	fs.mkdirSync(dir);
 }
 
-// error handler
 app.use(errorHandler);
 
-// cron section
-cron.schedule('0 0 * * 0', async () => {
-	console.log('⏰ Starting scheduled sync: Sunday at 00:00');
-
+cron.schedule('0 2 * * *', async () => {
 	try {
-		void (async () =>
-			await sync()
-				.then(() => transactions())
-				.then(() => migration()))();
-		console.log('✅ Scheduled synchronization completed successfully');
+		await syncService();
 	} catch (error) {
-		console.error('❌ Scheduled synchronization failed:', error);
+		console.error(`ошибка обновления данных: ${error}`);
 	}
 });
 
-// prisma section
 export const prismaLocal = new localClient();
 export const prismaRemote = new remoteClient();
 
-// sync section
-// Загрузка основных данных
-console.log('➡️ Loading all data...');
-void (async () =>
-	await sync()
-		.then(() => transactions())
-		.then(() => migration()))();
-console.log('✅ Synchronization completed successfully');
+void (async () => {
+	await syncService();
+})();
 
 export const aWss = getWss();
 export default app;

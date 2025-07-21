@@ -5,12 +5,17 @@ export const groupsTransaction = async (
 	data: Map<string, Prisma.groupsCreateInput>
 ) => {
 	console.log(`➡️ Group synchronization has started`);
-	const uniqueGroups = Array.from(data.values());
+	const uniqueGroups = Array.from(data.entries());
 
-	await prismaLocal.groups.createMany({
-		data: uniqueGroups,
-		skipDuplicates: true,
-	});
+	for (const [key, group] of uniqueGroups) {
+		await prismaLocal.groups.upsert({
+			where: {
+				key,
+			},
+			update: group,
+			create: { ...group, key },
+		});
+	}
 
 	console.log(`✅ Group synchronization completed`);
 };

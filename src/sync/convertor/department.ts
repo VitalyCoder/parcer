@@ -7,10 +7,15 @@ export const departmentTransaction = async (
 	console.log(`➡️ Departments synchronization has started`);
 	const departments = Array.from(data.values());
 
-	await prismaLocal.departments.createMany({
-		data: departments,
-		skipDuplicates: true,
-	});
+	for (const department of departments) {
+		await prismaLocal.departments.upsert({
+			where: {
+				key: department.key,
+			},
+			update: department,
+			create: department,
+		});
+	}
 
 	console.log(`✅ Departments synchronization completed`);
 };

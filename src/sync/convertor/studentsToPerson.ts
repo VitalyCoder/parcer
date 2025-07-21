@@ -37,9 +37,13 @@ export const studentsToPerson = async () => {
 
 		if (!email || addedEmails.has(email)) continue;
 
-		const existingPerson = await prismaLocal.persons.findUnique({
-			where: { sfeduEmail: email },
-		});
+		const educationForm = (await redisClient.get(
+			`educationForm:${person['ФормаОбучения_Key']}`
+		)) as string;
+
+		const recordBookNum = (await redisClient.get(
+			`creditBook:${person['ЗачетнаяКнига_Key']}`
+		)) as string;
 
 		if (!educationPlanMap.has(educationPlanKey)) {
 			educationPlanMap.set(educationPlanKey, {
@@ -55,81 +59,83 @@ export const studentsToPerson = async () => {
 			});
 		}
 
-		if (!existingPerson) {
-			const separatedName = separateName(name as string);
-			try {
-				await prismaLocal.$transaction(async () => {
-					const newPerson = await prismaLocal.persons.create({
-						data: {
-							key: personKey,
-							lastName: separatedName?.lastName || '',
-							firstName: separatedName?.firstName || '',
-							middleName: separatedName?.middleName,
-							sfeduEmail: email,
-							photoUrl: null,
-							isStudent: true,
-							isEmployee: false,
-						},
-					});
+		const separatedName = separateName(name as string);
 
-					await prismaLocal.studentsProfiles.create({
-						data: {
-							key: personKey,
-							person: {
-								connect: {
-									id: newPerson.id,
-								},
-							},
-							course: course || '',
-							educationForm:
-								(await redisClient.get(
-									`educationForm:${person['ФормаОбучения_Key']}`
-								)) || '',
-							educationLevel: '',
-							groupInternal: (await redisClient.get(`group:${groupKey}`)) || '',
-							groupOfficial: (await redisClient.get(`group:${groupKey}`)) || '',
-							recordBookNum:
-								(await redisClient.get(
-									`creditBook:${person['ЗачетнаяКнига_Key']}`
-								)) || '',
-							specialtyId: specialtyId,
-							departmentId: departmentId,
-							groupId: groupId ?? '00000000-0000-0000-0000-000000000000',
-						},
-					});
+		try {
+			await prismaLocal.$transaction(async tx => {
+				const newPerson = await tx.persons.upsert({
+					where: { sfeduEmail: email },
+					update: {
+						firstName: separatedName?.firstName || '',
+						lastName: separatedName?.lastName || '',
+						middleName: separatedName?.middleName,
+						isStudent: true,
+					},
+					create: {
+						key: personKey,
+						firstName: separatedName?.firstName || '',
+						lastName: separatedName?.lastName || '',
+						middleName: separatedName?.middleName,
+						sfeduEmail: email,
+						photoUrl: null,
+						isStudent: true,
+						isEmployee: false,
+					},
 				});
 
-				addedEmails.add(email);
-
-				if (!groupId) continue;
-
-				if (!groupsMap.has(groupId)) {
-					groupsMap.set(groupId, {
-						key: groupId,
-						degree: (await redisClient.get(
-							`educationForm:${person['ФормаОбучения_Key']}`
-						)) as string,
-						educationForm: (await redisClient.get(
-							`educationForm:${person['ФормаОбучения_Key']}`
-						)) as string,
+				await tx.studentsProfiles.upsert({
+					where: { key: personKey },
+					update: {
 						course: course || '',
-						specialtyId: specialtyId,
-						directionCode: '',
-						directionName: '',
-						programName: '',
-						programFull: '',
-						programLink: '', // данные будут позже
-						departmentName: department,
-						planId: (await redisClient.get(
-							`curriculum:${person['УчебныйПлан_Key']}`
-						)) as string,
-					});
-				}
-			} catch (error) {
-				console.error(`Ошибка при создании пользователя ${email}:`, error);
+						educationForm,
+						groupInternal: groupId || '',
+						groupOfficial: groupId || '',
+						recordBookNum,
+						specialtyId,
+						departmentId,
+						groupId: groupId ?? '00000000-0000-0000-0000-000000000000',
+					},
+					create: {
+						key: personKey,
+						person: { connect: { id: newPerson.id } },
+						course: course || '',
+						educationForm,
+						educationLevel: '',
+						groupInternal: groupId || '',
+						groupOfficial: groupId || '',
+						recordBookNum,
+						specialtyId,
+						departmentId,
+						groupId: groupId ?? '00000000-0000-0000-0000-000000000000',
+					},
+				});
+			});
+
+			addedEmails.add(email);
+
+			if (!groupId) continue;
+
+			if (!groupsMap.has(groupId)) {
+				groupsMap.set(groupId, {
+					key: groupId,
+					degree: educationForm,
+					educationForm,
+					course: course || '',
+					specialtyId: specialtyId,
+					directionCode: '',
+					directionName: '',
+					programName: '',
+					programFull: '',
+					programLink: '',
+					departmentName: department,
+					planId: educationPlan,
+				});
 			}
+		} catch (error) {
+			console.error(`❌ Error when creating/updating a user ${email}:`, error);
 		}
 	}
+
 	console.log(`✅ Student synchronization completed`);
 
 	await groupsTransaction(groupsMap);

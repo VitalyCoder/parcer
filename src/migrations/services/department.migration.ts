@@ -1,6 +1,7 @@
 import { prismaLocal, prismaRemote } from '../../app';
 
 export const departmentMigration = async () => {
+	console.log(`➡️ Departments migration has started`);
 	const departments = await prismaLocal.departments.findMany();
 	const dummyId = '00000000-0000-0000-0000-000000000000';
 
@@ -41,4 +42,5 @@ export const departmentMigration = async () => {
 			},
 		});
 	}
+	console.log(`✅ Departments migration completed`);
 };

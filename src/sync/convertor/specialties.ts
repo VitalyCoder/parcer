@@ -9,24 +9,24 @@ export const specialtiesTransaction = async () => {
 
 	for (const s of specialties) {
 		try {
-			const candidate = await prismaLocal.specialties.findUnique({
+			await prismaLocal.specialties.upsert({
 				where: {
 					code: s.name,
 				},
+				update: {
+					key: s.id,
+					name: s.name,
+				},
+				create: {
+					key: s.id,
+					code: s.name,
+					name: s.name,
+				},
 			});
-
-			if (!candidate) {
-				await prismaLocal.specialties.create({
-					data: {
-						key: s.id,
-						code: s.name,
-						name: s.name,
-					},
-				});
-			}
 		} catch (error) {
-			console.error(`Ошибка при добавлении specialty с name: ${s.name}`, error);
+			console.error(`❌ Error syncing specialty with name: ${s.name}`, error);
 		}
 	}
+
 	console.log(`✅ Specialties synchronization has completed`);
 };
