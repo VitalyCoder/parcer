@@ -48,6 +48,12 @@ export const studentsToPerson = async () => {
 			`creditBook:${person['ЗачетнаяКнига_Key']}`
 		)) as string;
 
+		const presentation = person['ПредставлениеЗачетнойКниги'].split(",") as string;
+		const group = presentation[3].split("-");
+		//const code = group[1].split('.')
+		//const directionCode = code[0] + '.' + code[1] + '.' + code[2];
+		
+		
 		if (!educationPlanMap.has(educationPlanKey)) {
 			educationPlanMap.set(educationPlanKey, {
 				key: educationPlanKey,
@@ -59,6 +65,7 @@ export const studentsToPerson = async () => {
 			departmentsMap.set(departmentKey, {
 				key: departmentKey,
 				name: department,
+				abbreviation: presentation[1]
 			});
 		}
 
@@ -116,16 +123,16 @@ export const studentsToPerson = async () => {
 
 			addedEmails.add(email);
 
-			if (!groupId) continue;
+			if (!groupKey) continue;
 
-			if (!groupsMap.has(groupId)) {
-				groupsMap.set(groupId, {
-					key: groupId,
+			if (!groupsMap.has(groupKey)) {
+				groupsMap.set(groupKey, {
+					key: groupKey,
 					degree: educationForm,
 					educationForm,
 					course: course || '',
 					specialtyId: specialtyId,
-					directionCode: '',
+					directionCode: "",
 					directionName: '',
 					programName: '',
 					programFull: '',

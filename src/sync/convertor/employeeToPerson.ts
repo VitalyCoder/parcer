@@ -2,6 +2,8 @@ import { getAllEmployees } from '../../1C/repositories/employees.repository';
 import { Logger } from '../../common/utils/logger';
 import { separateName } from '../../common/utils/separateName';
 import { prismaLocal } from '../../prisma';
+import { Prisma } from '../../generated/prisma/local';
+import { employmentsTransaction } from "c:/Files/parcer/src/sync/convertor/employment"
 import redisClient from '../../redis';
 const logger = new Logger();
 
@@ -10,6 +12,8 @@ export const employeeToPerson = async () => {
 
 	const employees = await getAllEmployees();
 	const addedEmails = new Set<string>();
+	const employmentsMap = new Map<string, Prisma.employmentsCreateInput>();
+	
 
 	const persons = await prismaLocal.persons.findMany({
 		select: {
@@ -26,10 +30,16 @@ export const employeeToPerson = async () => {
 	for (const employee of employees) {
 		const personKey = employee['Сотрудник_Key'] as string;
 		if (!personKey) continue;
-
+		const positionKey = employee['Должность_Key'] as string;
+		const position = await redisClient.get(`position:${positionKey}`);
+		const employmentType = employee['ВидЗанятости'] as string;
+		const rateKey = employee['Ставка_Key'] as string;
+		const rates = await redisClient.get(`rate:${rateKey}`);
+		const rate = rates?.split(' ')[0];
 		const email = await redisClient.hGet(personKey, 'email');
 		const name = await redisClient.hGet(`person:${personKey}`, 'name');
 		const separatedName = separateName(name || '');
+		
 
 		const isNameMatch = name && fullNames.includes(name);
 		const existingByEmail = email
@@ -38,6 +48,12 @@ export const employeeToPerson = async () => {
 		const existingByKey = await prismaLocal.persons.findUnique({
 			where: { key: personKey },
 		});
+		const employe = await prismaLocal.employeesProfiles.findUnique({
+			where: {
+				key: personKey,
+			}
+		});
+		const department = await prismaLocal.departments.findMany({});
 
 		const matchedByName = separatedName
 			? await prismaLocal.persons.findFirst({
@@ -104,6 +120,18 @@ export const employeeToPerson = async () => {
 					disciplines: [],
 				},
 			});
+
+			if (!employmentsMap.has(personKey)) {
+				employmentsMap.set(personKey, {
+					key: personKey, // сотрудника
+					employeeProfileId: employe?.id || "",
+					position: position || "",
+					employmentType:  employmentType,
+					departmentId : department[0]?.id || " ", // подразделение
+					rate: Number(rate?.replace(',', ".")|| " "),
+					
+				});
+			}
 		});
 
 		if (email) addedEmails.add(email);
@@ -112,4 +140,5 @@ export const employeeToPerson = async () => {
 	logger.success('Employee synchronization has completed', {
 		service: 'employees',
 	});
+	await employmentsTransaction(employmentsMap);
 };
