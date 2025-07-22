@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
+import { Logger } from '../../common/utils/logger';
 import ApiError from '../utils/api-error';
 import { httpResponse } from '../utils/http-response';
-import logger from '../utils/logger';
+const logger = new Logger();
 
 export const errorHandler = (
 	err: ApiError,
@@ -20,13 +21,12 @@ export const errorHandler = (
 		data: null,
 	};
 
-	logger.log({
-		level: 'error',
-		message: `[${format(new Date(), 'dd.MM.yyyy HH:mm')}] [${err.name}] ${
-			err.message
-		}`,
-	});
-	console.log(err.stack);
+	logger.error(
+		new Error(
+			`[${format(new Date(), 'dd.MM.yyyy HH:mm')}] [${err.name}] ${err.message}`
+		)
+	);
+	// logger.log(err.stack);
 
 	res.status(statusCode).json(response);
 };

@@ -1,0 +1,218 @@
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:04:23.412Z"}
+{"level":"info","message":"✅ Server is running on port 8000","service":"parser","timestamp":"2025-07-22T10:04:23.415Z"}
+{"level":"info","message":"ℹ️  Connected to Redis Client on localhost:6379","service":"redis","timestamp":"2025-07-22T10:04:23.773Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:05:00.044Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:07:10.818Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:07:10.822Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:07:13.235Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:07:13.235Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:07:13.956Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:07:13.957Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:07:16.265Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:07:16.265Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:07:38.070Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:07:38.070Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:07:38.183Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:07:38.183Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:07:38.387Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:07:38.387Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:07:38.388Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:07:38.388Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:07:39.350Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:07:39.350Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:07:39.493Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:07:39.493Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:07:39.749Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:07:39.749Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:07:39.750Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:07:39.750Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:07:40.158Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:07:40.159Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:07:40.159Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:07:40.159Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:07:40.813Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:07:40.813Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:07:40.813Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:07:40.813Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:07:42.101Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:07:42.101Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:07:42.309Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:07:42.309Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:07:42.628Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:07:42.629Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:07:42.634Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:07:42.634Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:07:42.637Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:07:42.637Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:07:42.855Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:07:42.855Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:07:43.205Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:07:43.206Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:07:43.207Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:07:43.207Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:07:49.998Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:07:49.999Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:07:50.407Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:07:50.407Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:10:00.036Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:12:07.379Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:12:07.382Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:12:10.658Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:12:10.659Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:12:31.205Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:12:31.205Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:12:31.306Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:12:31.306Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:12:31.474Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:12:31.474Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:12:31.475Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:12:31.475Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:12:32.984Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:12:32.984Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:12:32.984Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:12:32.984Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:12:34.527Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:12:34.527Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:12:34.690Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:12:34.690Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:12:34.965Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:12:34.965Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:12:34.966Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:12:34.967Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:12:41.554Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:12:41.554Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:15:00.035Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:17:08.036Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:17:08.037Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:17:13.516Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:17:13.517Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:17:52.600Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:17:52.600Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:17:52.696Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:17:52.696Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:17:52.842Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:17:52.843Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:17:52.843Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:17:52.843Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:17:54.386Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:17:54.386Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:17:54.387Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:17:54.387Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:17:55.990Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:17:55.990Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:17:56.146Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:17:56.147Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:17:56.466Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:17:56.466Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:17:56.468Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:17:56.468Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:18:03.673Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:18:03.674Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:20:00.047Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:22:19.983Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:22:19.987Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:22:23.680Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:22:23.681Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:22:55.274Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:22:55.275Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:22:55.370Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:22:55.370Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:22:55.531Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:22:55.531Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:22:55.532Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:22:55.532Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:22:57.165Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:22:57.165Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:22:57.165Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:22:57.165Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:22:59.116Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:22:59.117Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:22:59.311Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:22:59.311Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:22:59.608Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:22:59.608Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:22:59.610Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:22:59.610Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:23:07.071Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:23:07.071Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:25:00.071Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:27:10.431Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:27:10.436Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:27:13.552Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:27:13.552Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:27:36.445Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:27:36.445Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:27:36.531Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:27:36.531Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:27:36.678Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:27:36.679Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:27:36.679Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:27:36.679Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:27:38.560Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:27:38.560Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:27:38.560Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:27:38.560Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:27:40.091Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:27:40.091Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:27:40.251Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:27:40.251Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:27:40.525Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:27:40.525Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:27:40.527Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:27:40.527Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:27:46.852Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:27:46.853Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:30:00.051Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:32:16.873Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:32:16.877Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:32:20.036Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:32:20.036Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:32:42.010Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:32:42.010Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:32:42.101Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:32:42.101Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:32:42.265Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:32:42.265Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:32:42.267Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:32:42.267Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:32:43.851Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:32:43.851Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:32:43.851Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:32:43.851Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:32:45.623Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:32:45.623Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:32:45.830Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:32:45.831Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:32:46.114Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:32:46.114Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:32:46.117Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:32:46.117Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:32:53.306Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:32:53.307Z"}
+{"level":"info","message":"ℹ️  Start data synchronization","service":"sync","timestamp":"2025-07-22T10:35:00.066Z"}
+{"level":"info","message":"ℹ️  Data synchronization has started","service":"transaction","timestamp":"2025-07-22T10:37:10.810Z"}
+{"level":"info","message":"ℹ️  Specialties synchronization has started","service":"specialties","timestamp":"2025-07-22T10:37:10.811Z"}
+{"level":"info","message":"✅ Specialties synchronization has completed","service":"specialties","timestamp":"2025-07-22T10:37:14.539Z"}
+{"level":"info","message":"ℹ️  Student synchronization has started","service":"students","timestamp":"2025-07-22T10:37:14.540Z"}
+{"level":"info","message":"✅ Student synchronization completed","service":"students","timestamp":"2025-07-22T10:37:38.839Z"}
+{"level":"info","message":"ℹ️  Group synchronization has started","service":"groups","timestamp":"2025-07-22T10:37:38.840Z"}
+{"level":"info","message":"✅ Group synchronization completed","service":"groups","timestamp":"2025-07-22T10:37:38.954Z"}
+{"level":"info","message":"ℹ️  Education plan synchronization has started","service":"education plan","timestamp":"2025-07-22T10:37:38.954Z"}
+{"level":"info","message":"✅ Education plan synchronization completed","service":"education plan","timestamp":"2025-07-22T10:37:39.150Z"}
+{"level":"info","message":"ℹ️  Departments synchronization has started","service":"department","timestamp":"2025-07-22T10:37:39.150Z"}
+{"level":"info","message":"✅ Departments synchronization completed","service":"department","timestamp":"2025-07-22T10:37:39.152Z"}
+{"level":"info","message":"ℹ️  Employee synchronization has started","service":"employees","timestamp":"2025-07-22T10:37:39.152Z"}
+{"level":"info","message":"✅ Employee synchronization has completed","service":"employees","timestamp":"2025-07-22T10:37:41.104Z"}
+{"level":"info","message":"✅ Data synchronization completed","service":"transaction","timestamp":"2025-07-22T10:37:41.104Z"}
+{"level":"info","message":"ℹ️  Data migration has started","service":"migration","timestamp":"2025-07-22T10:37:41.104Z"}
+{"level":"info","message":"ℹ️  Specialties migration has started","service":"specialty","timestamp":"2025-07-22T10:37:41.104Z"}
+{"level":"info","message":"✅ Specialties migration completed","service":"specialty","timestamp":"2025-07-22T10:37:42.725Z"}
+{"level":"info","message":"ℹ️  Educations plans migration has started","service":"education plan","timestamp":"2025-07-22T10:37:42.725Z"}
+{"level":"info","message":"✅ Educations plans migration completed","service":"education plan","timestamp":"2025-07-22T10:37:42.894Z"}
+{"level":"info","message":"ℹ️  Groups migration has started","service":"group","timestamp":"2025-07-22T10:37:42.895Z"}
+{"level":"info","message":"✅ Groups migration completed","service":"group","timestamp":"2025-07-22T10:37:43.194Z"}
+{"level":"info","message":"ℹ️  Departments migration has started","service":"department","timestamp":"2025-07-22T10:37:43.195Z"}
+{"level":"info","message":"✅ Departments migration completed","service":"department","timestamp":"2025-07-22T10:37:43.196Z"}
+{"level":"info","message":"ℹ️  Persons migration has started","service":"person","timestamp":"2025-07-22T10:37:43.196Z"}
+{"level":"info","message":"✅ Persons migration completed","service":"person","timestamp":"2025-07-22T10:37:50.070Z"}
+{"level":"info","message":"✅ Data migration completed","service":"migration","timestamp":"2025-07-22T10:37:50.071Z"}

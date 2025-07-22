@@ -1,10 +1,14 @@
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { Prisma } from '../../generated/prisma/local';
+import { prismaLocal } from '../../prisma';
+const logger = new Logger();
 
 export const departmentTransaction = async (
 	data: Map<string, Prisma.departmentsCreateInput>
 ) => {
-	console.log(`➡️ Departments synchronization has started`);
+	logger.log('Departments synchronization has started', {
+		service: 'department',
+	});
 	const departments = Array.from(data.values());
 
 	for (const department of departments) {
@@ -17,5 +21,7 @@ export const departmentTransaction = async (
 		});
 	}
 
-	console.log(`✅ Departments synchronization completed`);
+	logger.success('Departments synchronization completed', {
+		service: 'department',
+	});
 };

@@ -1,13 +1,20 @@
+import { Logger } from '../common/utils/logger';
 import { employeeToPerson } from './convertor/employeeToPerson';
 import { specialtiesTransaction } from './convertor/specialties';
 import { studentsToPerson } from './convertor/studentsToPerson';
 
+const logger = new Logger();
+
 export const transactions = async () => {
-	console.log(`➡️ Data synchronization has started`);
+	logger.log(`Data synchronization has started`, {
+		service: 'transaction',
+	});
 
 	await specialtiesTransaction()
 		.then(() => studentsToPerson())
 		.then(() => employeeToPerson());
 
-	console.log(`✅ Data synchronization completed`);
+	logger.success(`Data synchronization completed`, {
+		service: 'transaction',
+	});
 };

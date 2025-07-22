@@ -1,5 +1,5 @@
-import { prismaRemote } from '../../app';
 import { employeesProfiles } from '../../generated/prisma/local';
+import { prismaRemote } from '../../prisma';
 
 export const employeeMigration = async (employee: employeesProfiles) => {
 	await prismaRemote.employeesProfiles.upsert({

@@ -19,8 +19,11 @@ import { getAllSpecializations } from '../1C/repositories/specializations.reposi
 import { getAllSpecialties } from '../1C/repositories/specialties.repository';
 import { getAllSubgroups } from '../1C/repositories/subgroups.repository';
 import { getAllUnits } from '../1C/repositories/units.repository';
+import { Logger } from '../common/utils/logger';
 import misc from '../common/utils/misc';
 import redisClient, { bulkHSet, deleteKeysByPrefix } from '../redis';
+
+const logger = new Logger();
 
 // Функции для получения данных и кэширования в Redis
 const getPositions = async () => {
@@ -191,7 +194,7 @@ const getPlatoons = async () => {
 };
 
 export default async () => {
-	console.log('Start data synchronization');
+	logger.log('Start data synchronization', { service: 'sync' });
 
 	try {
 		const dataFetchFunctions = [
@@ -235,13 +238,15 @@ export default async () => {
 				await item.func();
 				progressBar.increment(1, { name: item.name });
 			} catch (error) {
-				console.error(`Error fetching ${item.name}:`, error);
+				logger.error(new Error(`Error fetching ${item.name}: ${error}`), {
+					service: 'sync',
+				});
 				progressBar.increment(1, { name: `${item.name} (failed)` });
 			}
 		}
 
 		progressBar.stop();
 	} catch (e) {
-		console.error('❌ Synchronization error:', e);
+		logger.error(new Error(`Synchronization error: ${e}`), { service: 'sync' });
 	}
 };

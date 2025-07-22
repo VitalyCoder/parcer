@@ -1,10 +1,12 @@
 import { getAllEmployees } from '../../1C/repositories/employees.repository';
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { separateName } from '../../common/utils/separateName';
+import { prismaLocal } from '../../prisma';
 import redisClient from '../../redis';
+const logger = new Logger();
 
 export const employeeToPerson = async () => {
-	console.log(`➡️ Employee synchronization has started`);
+	logger.log('Employee synchronization has started', { service: 'employees' });
 
 	const employees = await getAllEmployees();
 	const addedEmails = new Set<string>();
@@ -107,5 +109,7 @@ export const employeeToPerson = async () => {
 		if (email) addedEmails.add(email);
 	}
 
-	console.log(`✅ Employee synchronization has completed`);
+	logger.success('Employee synchronization has completed', {
+		service: 'employees',
+	});
 };

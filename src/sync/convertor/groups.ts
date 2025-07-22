@@ -1,10 +1,12 @@
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { Prisma } from '../../generated/prisma/local';
+import { prismaLocal } from '../../prisma';
+const logger = new Logger();
 
 export const groupsTransaction = async (
 	data: Map<string, Prisma.groupsCreateInput>
 ) => {
-	console.log(`➡️ Group synchronization has started`);
+	logger.log('Group synchronization has started', { service: 'groups' });
 	const uniqueGroups = Array.from(data.entries());
 
 	for (const [key, group] of uniqueGroups) {
@@ -17,5 +19,5 @@ export const groupsTransaction = async (
 		});
 	}
 
-	console.log(`✅ Group synchronization completed`);
+	logger.success('Group synchronization completed', { service: 'groups' });
 };

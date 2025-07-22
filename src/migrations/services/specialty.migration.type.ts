@@ -1,7 +1,11 @@
-import { prismaLocal, prismaRemote } from '../../app';
+import { Logger } from '../../common/utils/logger';
+import { prismaLocal, prismaRemote } from '../../prisma';
+const logger = new Logger();
 
 export const specialtyMigration = async () => {
-	console.log(`➡️ Specialties migration has started`);
+	logger.log('Specialties migration has started', {
+		service: 'specialty',
+	});
 	const specialties = await prismaLocal.specialties.findMany();
 
 	const dummyId = '00000000-0000-0000-0000-000000000000';
@@ -36,8 +40,12 @@ export const specialtyMigration = async () => {
 				},
 			});
 		} catch (error) {
-			console.error(`❌ Failed to upsert specialty ${s.id}:`, error);
+			logger.error(new Error(`Failed to upsert specialty ${s.id}: ${error}`), {
+				service: 'specialty',
+			});
 		}
 	}
-	console.log(`✅ Specialties migration completed`);
+	logger.success('Specialties migration completed', {
+		service: 'specialty',
+	});
 };

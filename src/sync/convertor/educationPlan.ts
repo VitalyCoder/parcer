@@ -1,10 +1,14 @@
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { Prisma } from '../../generated/prisma/local';
+import { prismaLocal } from '../../prisma';
+const logger = new Logger();
 
 export const educationPlanTransaction = async (
 	data: Map<string, Prisma.educationsPlansCreateInput>
 ) => {
-	console.log(`➡️ Education plan synchronization has started`);
+	logger.log('Education plan synchronization has started', {
+		service: 'education plan',
+	});
 	const educationPlans = Array.from(data.values());
 
 	for (const plan of educationPlans) {
@@ -17,5 +21,7 @@ export const educationPlanTransaction = async (
 		});
 	}
 
-	console.log(`✅ Education plan synchronization completed`);
+	logger.success('Education plan synchronization completed', {
+		service: 'education plan',
+	});
 };

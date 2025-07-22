@@ -1,7 +1,11 @@
-import { prismaLocal, prismaRemote } from '../../app';
+import { Logger } from '../../common/utils/logger';
+import { prismaLocal, prismaRemote } from '../../prisma';
+const logger = new Logger();
 
 export const educationMigration = async () => {
-	console.log(`➡️ Educations plans migration has started`);
+	logger.log('Educations plans migration has started', {
+		service: 'education plan',
+	});
 	const educationPlans = await prismaLocal.educationsPlans.findMany();
 	const dummyId = '00000000-0000-0000-0000-000000000000';
 
@@ -37,5 +41,7 @@ export const educationMigration = async () => {
 		});
 	}
 
-	console.log(`✅ Educations plans migration completed`);
+	logger.success('Educations plans migration completed', {
+		service: 'education plan',
+	});
 };

@@ -1,5 +1,7 @@
-import { prismaRemote } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { studentsProfiles } from '../../generated/prisma/local';
+import { prismaRemote } from '../../prisma';
+const logger = new Logger();
 
 export const studentMigration = async (student: studentsProfiles) => {
 	const remoteGroup = await prismaRemote.groups.findUnique({
@@ -7,8 +9,11 @@ export const studentMigration = async (student: studentsProfiles) => {
 	});
 
 	if (!remoteGroup) {
-		console.warn(
-			`⚠️ Remote group not found for groupId ${student.groupId}. Skipping student ${student.id}`
+		logger.warn(
+			`Remote group not found for groupId ${student.groupId}. Skipping student ${student.id}`,
+			{
+				service: 'student',
+			}
 		);
 		return;
 	}
@@ -59,6 +64,11 @@ export const studentMigration = async (student: studentsProfiles) => {
 			},
 		});
 	} catch (error) {
-		console.error(`❌ Error upserting student profile ${student.id}:`, error);
+		logger.error(
+			new Error(`Error upserting student profile ${student.id}: ${error}`),
+			{
+				service: 'student',
+			}
+		);
 	}
 };

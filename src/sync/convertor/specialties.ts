@@ -1,9 +1,13 @@
 import { TSpecialtyEntity } from '../../1C/entities/specialty.entity';
 import { getAllSpecialties } from '../../1C/repositories/specialties.repository';
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
+import { prismaLocal } from '../../prisma';
+const logger = new Logger();
 
 export const specialtiesTransaction = async () => {
-	console.log(`➡️ Specialties synchronization has started`);
+	logger.log('Specialties synchronization has started', {
+		service: 'specialties',
+	});
 
 	const specialties = (await getAllSpecialties()) as Array<TSpecialtyEntity>;
 
@@ -24,9 +28,16 @@ export const specialtiesTransaction = async () => {
 				},
 			});
 		} catch (error) {
-			console.error(`❌ Error syncing specialty with name: ${s.name}`, error);
+			logger.error(
+				new Error(`Error syncing specialty with name: ${s.name}: ${error}`),
+				{
+					service: 'specialties',
+				}
+			);
 		}
 	}
 
-	console.log(`✅ Specialties synchronization has completed`);
+	logger.success('Specialties synchronization has completed', {
+		service: 'specialties',
+	});
 };

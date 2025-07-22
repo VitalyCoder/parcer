@@ -1,7 +1,11 @@
-import { prismaLocal, prismaRemote } from '../../app';
+import { Logger } from '../../common/utils/logger';
+import { prismaLocal, prismaRemote } from '../../prisma';
+const logger = new Logger();
 
 export const groupMigration = async () => {
-	console.log(`➡️ Groups migration has started`);
+	logger.log('Groups migration has started', {
+		service: 'group',
+	});
 	const groups = await prismaLocal.groups.findMany();
 
 	const dummyGroupId = '00000000-0000-0000-0000-000000000000';
@@ -121,8 +125,12 @@ export const groupMigration = async () => {
 				},
 			});
 		} catch (error) {
-			console.error(`❌ Error upserting group ${g.id}:`, error);
+			logger.error(new Error(`Error upserting group ${g.id}: ${error}`), {
+				service: 'group',
+			});
 		}
 	}
-	console.log(`✅ Groups migration completed`);
+	logger.success('Groups migration completed', {
+		service: 'group',
+	});
 };

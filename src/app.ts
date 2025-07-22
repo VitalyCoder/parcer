@@ -1,74 +1,125 @@
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
-import express from 'express';
-import expressWs from 'express-ws';
+import express, { Application } from 'express';
 import * as fs from 'fs';
 import morgan from 'morgan';
 import cron from 'node-cron';
 import winston from 'winston';
-const { app, getWss } = expressWs(express());
 
 import cors from './common/middlewares/cors';
-
 import { errorHandler } from './common/middlewares/error-handler';
-import logger from './common/utils/logger';
-import { PrismaClient as localClient } from './generated/prisma/local';
-import { PrismaClient as remoteClient } from './generated/prisma/remote';
+import { ConfigService } from './common/utils/config.service';
+import { Logger } from './common/utils/logger';
 import { migration } from './migrations/migration';
 import sync from './sync/sync';
 import { transactions } from './sync/transactions';
 
-const syncService = async () => {
-	await sync()
-		.then(() => transactions())
-		.then(() => migration());
-};
+export class App {
+	private readonly app: Application;
+	private readonly configService: ConfigService;
+	private readonly logger: Logger;
+	private readonly apiPort: number;
+	private readonly nodeEnv: string;
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cors);
-app.use(cookieParser());
-app.use(
-	cookieSession({
-		maxAge: 30 * 24 * 60 * 60 * 1000,
-		keys: [process.env.COOKIE_KEY as string],
-	})
-);
-
-const logStream = fs.createWriteStream('access.log', {
-	flags: 'a',
-});
-app.use(morgan('combined', { stream: logStream }));
-if (process.env.NODE_ENV !== 'production') {
-	logger.add(
-		new winston.transports.Console({
-			format: winston.format.simple(),
-		})
-	);
-}
-
-app.use('/uploads', express.static('./uploads'));
-const dir = './uploads';
-if (!fs.existsSync(dir)) {
-	fs.mkdirSync(dir);
-}
-
-app.use(errorHandler);
-
-cron.schedule('0 2 * * *', async () => {
-	try {
-		await syncService();
-	} catch (error) {
-		console.error(`Data update error: ${error}`);
+	private constructor(app: Application) {
+		this.app = app;
+		this.configService = new ConfigService();
+		this.logger = new Logger();
+		this.apiPort = this.configService.getOrThrow<number>('API_PORT');
+		this.nodeEnv = this.configService.getOrThrow<string>('NODE_ENV');
 	}
-});
 
-export const prismaLocal = new localClient();
-export const prismaRemote = new remoteClient();
+	private ensureUploadDir(): this {
+		const dir = './uploads';
+		if (!fs.existsSync(dir)) {
+			fs.mkdirSync(dir);
+		}
+		return this;
+	}
 
-void (async () => {
-	await syncService();
-})();
+	private setupMiddlewares(): this {
+		this.app.use(express.json({ limit: '10mb' }));
+		this.app.use(express.urlencoded({ extended: true }));
+		this.app.use(cors);
+		this.app.use(cookieParser());
+		this.app.use(
+			cookieSession({
+				maxAge: 30 * 24 * 60 * 60 * 1000,
+				keys: [process.env.COOKIE_KEY as string],
+			})
+		);
+		return this;
+	}
 
-export const aWss = getWss();
-export default app;
+	private setupLogger(): this {
+		const logStream = fs.createWriteStream('access.log', { flags: 'a' });
+		this.app.use(morgan('combined', { stream: logStream }));
+
+		if (this.nodeEnv !== 'production') {
+			this.logger.writer.add(
+				new winston.transports.Console({
+					format: winston.format.simple(),
+				})
+			);
+		}
+		return this;
+	}
+
+	private setupStaticRoutes(): this {
+		this.app.use('/uploads', express.static('./uploads'));
+		return this;
+	}
+
+	private setupErrorHandler(): this {
+		this.app.use(errorHandler);
+		return this;
+	}
+
+	private scheduleCronJobs(): this {
+		// */5 * * * *
+		// 0 2 * * *
+		cron.schedule('*/5 * * * *', async () => {
+			try {
+				await this.syncService();
+			} catch (error) {
+				this.logger.error(new Error(`Cron Sync Error: ${error}`), {
+					service: 'cron',
+				});
+			}
+		});
+		return this;
+	}
+
+	private async syncService(): Promise<this> {
+		await sync()
+			.then(() => transactions())
+			.then(() => migration())
+			.catch(error => {
+				this.logger.error(`SyncService Error: ${error}`);
+			});
+		return this;
+	}
+
+	private async runApp(): Promise<this> {
+		this.app.listen(this.apiPort, () => {
+			this.logger.success(`Server is running on port ${this.apiPort}`);
+		});
+
+		await this.syncService();
+		return this;
+	}
+
+	public static async run(): Promise<void> {
+		const app = express();
+		const instance = new App(app);
+
+		await instance
+			.setupLogger()
+			.setupMiddlewares()
+			.setupStaticRoutes()
+			.setupErrorHandler()
+			.ensureUploadDir()
+			.scheduleCronJobs()
+			.runApp();
+	}
+}

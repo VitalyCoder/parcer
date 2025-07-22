@@ -1,14 +1,17 @@
 import { getAllStudents } from '../../1C/repositories/students.repository';
-import { prismaLocal } from '../../app';
+import { Logger } from '../../common/utils/logger';
 import { separateName } from '../../common/utils/separateName';
 import { Prisma } from '../../generated/prisma/local';
+import { prismaLocal } from '../../prisma';
 import redisClient from '../../redis';
 import { departmentTransaction } from './department';
 import { educationPlanTransaction } from './educationPlan';
 import { groupsTransaction } from './groups';
 
+const logger = new Logger();
+
 export const studentsToPerson = async () => {
-	console.log(`➡️ Student synchronization has started`);
+	logger.log('Student synchronization has started', { service: 'students' });
 
 	const students = await getAllStudents();
 	const addedEmails = new Set<string>();
@@ -132,11 +135,14 @@ export const studentsToPerson = async () => {
 				});
 			}
 		} catch (error) {
-			console.error(`❌ Error when creating/updating a user ${email}:`, error);
+			logger.error(
+				new Error(`Error when creating/updating a user ${email}: ${error}`),
+				{ service: 'students' }
+			);
 		}
 	}
 
-	console.log(`✅ Student synchronization completed`);
+	logger.success('Student synchronization completed', { service: 'students' });
 
 	await groupsTransaction(groupsMap);
 	await educationPlanTransaction(educationPlanMap);

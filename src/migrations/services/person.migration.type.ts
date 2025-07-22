@@ -1,9 +1,14 @@
-import { prismaLocal, prismaRemote } from '../../app';
+import { prismaLocal, prismaRemote } from '../../prisma';
 import { employeeMigration } from './employee.migration';
 import { studentMigration } from './student.migration';
 
+import { Logger } from '../../common/utils/logger';
+const logger = new Logger();
+
 export const personMigration = async () => {
-	console.log(`➡️ Persons migration has started`);
+	logger.log('Persons migration has started', {
+		service: 'person',
+	});
 	const persons = await prismaLocal.persons.findMany({
 		include: {
 			studentProfile: true,
@@ -44,9 +49,16 @@ export const personMigration = async () => {
 				await employeeMigration(person.employeeProfile);
 			}
 		} catch (error) {
-			console.error(`❌ Error during migration of person ${person.id}:`, error);
+			logger.error(
+				new Error(`Error during migration of person ${person.id}: ${error}`),
+				{
+					service: 'person',
+				}
+			);
 		}
 	}
 
-	console.log(`✅ Persons migration completed`);
+	logger.success('Persons migration completed', {
+		service: 'person',
+	});
 };
