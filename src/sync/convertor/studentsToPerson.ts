@@ -7,7 +7,8 @@ import redisClient from '../../redis';
 import { departmentTransaction } from './department';
 import { educationPlanTransaction } from './educationPlan';
 import { groupsTransaction } from './groups';
-
+import {extractdirectionCode} from '../../common/utils/extractDirectionCode'
+import {extractЕducationLevel} from '../../common/utils/extractEducationLevel'
 const logger = new Logger();
 
 export const studentsToPerson = async () => {
@@ -49,7 +50,7 @@ export const studentsToPerson = async () => {
 		)) as string;
 
 		const presentation = person['ПредставлениеЗачетнойКниги'].split(",") as string;
-		const group = presentation[3].split("-");
+		
 		//const code = group[1].split('.')
 		//const directionCode = code[0] + '.' + code[1] + '.' + code[2];
 		
@@ -70,6 +71,7 @@ export const studentsToPerson = async () => {
 		}
 
 		const separatedName = separateName(name as string);
+		const educationLevel = extractЕducationLevel(groupId as string);
 
 		try {
 			await prismaLocal.$transaction(async tx => {
@@ -110,7 +112,7 @@ export const studentsToPerson = async () => {
 						person: { connect: { id: newPerson.id } },
 						course: course || '',
 						educationForm,
-						educationLevel: '',
+						educationLevel: educationLevel || '',
 						groupInternal: groupId || '',
 						groupOfficial: groupId || '',
 						recordBookNum,
@@ -124,15 +126,16 @@ export const studentsToPerson = async () => {
 			addedEmails.add(email);
 
 			if (!groupKey) continue;
+			const directionCode = extractdirectionCode(groupId as string);
 
 			if (!groupsMap.has(groupKey)) {
 				groupsMap.set(groupKey, {
 					key: groupKey,
-					degree: educationForm,
+					degree: educationLevel,
 					educationForm,
 					course: course || '',
 					specialtyId: specialtyId,
-					directionCode: "",
+					directionCode: directionCode,
 					directionName: '',
 					programName: '',
 					programFull: '',
